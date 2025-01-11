@@ -13,6 +13,11 @@ export const auth = {
   authenticate,
 }
 
+/*
+ * The authenticate method verifies the provided username and password. On success a JWT (JSON Web Token)
+ * is generated with the jsonwebtoken npm package, the token is digitally signed using a secret key (JWT_SECRET)
+ *  so it can't be tampered with, the jwt secret is defined in the .env file.
+*/
 async function authenticate({ username, password }: { username: string, password: string }) {
   const user = await User.findOne({ username });
 
