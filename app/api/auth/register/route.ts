@@ -7,7 +7,11 @@ import {
 	jwtMiddleware,
 	validateMiddleware
 } from "_helpers/server/api";
-
+/* --- Register Route Handler ---
+* It receives HTTP requests sent to the register route /api/account/register. It supports HTTP
+* POST requests containing user details which are registered in the Next.js tutorial app by the
+* usersRepo.create() method.
+*/
 export async function POST(req: NextRequest) {
 	try {
 		// global middleware
