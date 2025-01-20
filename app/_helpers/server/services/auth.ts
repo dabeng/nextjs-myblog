@@ -7,7 +7,7 @@ import { User } from '../models';
  * The auth helper is used to verify the JWT token in the request 'authorization' cookie.
 */
 
-export const auth = {
+export const authService = {
   isAuthenticated,
   verifyToken,
   authenticate,

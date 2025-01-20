@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { headers } from 'next/headers';
 import { User } from '../models';
 
-export const UserService = {
+export const userService = {
   getAll,
   getById,
   getCurrent,
