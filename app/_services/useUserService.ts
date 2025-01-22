@@ -90,7 +90,7 @@ function useUserService(): IUserService {
       userStore.setState({ users: await fetch.get("/api/users") });
     },
     getById: async id => {
-      userStore.setState({ user: undefined }); // TODO, remov  e this line
+      userStore.setState({ user: undefined }); // TODO, remove this line
       try {
         userStore.setState({
           user: await fetch.get(`/api/users/${id}`)
