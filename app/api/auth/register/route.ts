@@ -1,12 +1,9 @@
 import { z } from "zod";
 import type { NextRequest } from 'next/server';
 import { NextResponse } from "next/server";
-import { userService } from "_helpers/server";
-import {
-	errorHandler,
+import { userService,	errorHandler,
 	jwtMiddleware,
-	validateMiddleware
-} from "_helpers/server/api";
+	validateMiddleware } from "_helpers/server";
 /* --- Register Route Handler ---
 * It receives HTTP requests sent to the register route /api/account/register. It supports HTTP
 * POST requests containing user details which are registered in the Next.js tutorial app by the

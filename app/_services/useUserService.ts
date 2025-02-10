@@ -17,7 +17,7 @@ interface IUser {
   lastName: string;
   username: string;
   password: string;
-  isDeleting?: boolean;
+  isDeleting?: boolean; // TODOremove it
 }
 
 interface IUserStore {

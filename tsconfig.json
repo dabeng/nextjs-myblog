@@ -18,6 +18,8 @@
         "name": "next"
       }
     ],
+    // make all imports without a dot '.' prefix relative to the app directory
+    "baseUrl": "./app",
     "paths": {
       "@/*": ["./*"]
     }

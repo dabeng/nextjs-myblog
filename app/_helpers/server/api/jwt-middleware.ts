@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { auth } from '_helpers/server';
+import { authService } from '_helpers/server';
 
 export { jwtMiddleware };
 
@@ -15,7 +15,7 @@ async function jwtMiddleware(req: NextRequest) {
 		return;
 
 	// verify token in request cookie
-	const id = auth.verifyToken();
+	const id = await authService.verifyToken();
 	req.headers.set('userId', id);
 }
 

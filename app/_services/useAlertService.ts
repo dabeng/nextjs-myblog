@@ -2,6 +2,23 @@ import { create } from "zustand";
 
 export { useAlertService };
 
+// interfaces
+interface IAlert {
+  type: string;
+  message: string;
+  showAfterRedirect: boolean;
+}
+
+interface IAlertStore {
+  alert?: IAlert;
+}
+
+interface IAlertService extends IAlertStore {
+  success: (message: string, showAfterRedirect?: boolean) => void;
+  error: (message: string, showAfterRedirect?: boolean) => void;
+  clear: () => void;
+}
+
 // alert state store
 const alertStore = create<IAlertStore>(() => ({}));
 
@@ -40,20 +57,4 @@ function useAlertService(): IAlertService {
   };
 }
 
-// interfaces
 
-interface IAlert {
-  type: string;
-  message: string;
-  showAfterRedirect: boolean;
-}
-
-interface IAlertStore {
-  alert?: IAlert;
-}
-
-interface IAlertService extends IAlertStore {
-  success: (message: string, showAfterRedirect?: boolean) => void;
-  error: (message: string, showAfterRedirect?: boolean) => void;
-  clear: () => void;
-}
