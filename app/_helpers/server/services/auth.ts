@@ -51,9 +51,9 @@ async function verifyToken() {
 * return the current authentication status as a boolean (true or false). It is used in the secure layout
 *  and account layout components.
 */
-function isAuthenticated() {
+async function isAuthenticated() {
   try {
-    verifyToken();
+    await verifyToken();
     return true;
   } catch {
     return false;

@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { redirect } from "next/navigation";
 
 import { authService } from "_helpers/server";
@@ -5,9 +6,9 @@ import { Alert } from "_components";
 
 export default Layout;
 
-function Layout({ children }: { children: React.ReactNode }) {
+async function Layout({ children }: { children: React.ReactNode }) {
   // if logged in redirect to home page
-  if (authService.isAuthenticated()) {
+  if (await authService.isAuthenticated()) {
     redirect("/");
   }
 

@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -11,7 +12,7 @@ export default Layout;
 
 async function Layout({ children }: { children: React.ReactNode }) {
   // if not logged in redirect to login page
-  if (!authService.isAuthenticated()) {
+  if (!(await authService.isAuthenticated())) {
     const returnUrl = encodeURIComponent((await headers()).get("x-invoke-path") || "/");
     redirect(`/account/login?returnUrl=${returnUrl}`);
   }

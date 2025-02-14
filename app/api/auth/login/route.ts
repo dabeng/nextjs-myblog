@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     const { user, token } = await authService.authenticate(body);
 
     // return jwt token in http only cookie
-    (await cookies()).set("authorization", token, { httpOnly: true }); // TODO, access token +refresh token
+    (await cookies()).set('authorization', token, { httpOnly: true }); // TODO, access token +refresh token
 
     return NextResponse.json(user);
   } catch (err: any) {
