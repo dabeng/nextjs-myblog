@@ -32,7 +32,7 @@ function Login() {
           <input
             {...fields.username}
             type="text"
-            className={`form-control ${errors.username ? "is-danger" : ""}`}
+            className={`input ${errors.username ? "is-danger" : ""}`}
           />
         </div>
         <p className="help is-danger">{errors.username?.message?.toString()}</p>
@@ -43,7 +43,7 @@ function Login() {
           <input
             {...fields.password}
             type="password"
-            className={`form-control ${errors.password ? "is-invalid" : ""}`}
+            className={`input ${errors.password ? "is-invalid" : ""}`}
           />
         </div>
         <p className="help is-danger">{errors.password?.message?.toString()}</p>
