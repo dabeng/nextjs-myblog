@@ -13,9 +13,11 @@ async function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="columns">
+    <>
       <Alert />
-      <div className="column is-6 is-offset-3">{children}</div>
-    </div>
+      <div className="columns hero is-fullheight is-justify-content-center is-align-items-center">
+        <div className="column is-4">{children}</div>
+      </div>
+    </>
   );
 }

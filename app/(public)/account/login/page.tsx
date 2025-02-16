@@ -25,7 +25,6 @@ function Login() {
 
   return (
     <form className="box" onSubmit={handleSubmit(onSubmit)}>
-      <h4 className="card-header">Login</h4>
       <div className="field">
         <label className="label">Username</label>
         <div className="control">
@@ -50,7 +49,7 @@ function Login() {
       </div>
       <div className="field is-grouped">
         <div className="control">
-          <button disabled={formState.isSubmitting} className="button is-primary">
+          <button disabled={formState.isSubmitting} className="button is-link">
             {formState.isSubmitting && (
               <span className="icon">
                 <i className="fa-solid fa-circle-notch"></i>
@@ -60,7 +59,7 @@ function Login() {
           </button>
         </div>
         <div className="control">
-          <Link href="/account/register" className="button is-link">
+          <Link href="/account/register" className="button is-link is-light">
             Register
           </Link>
         </div>
