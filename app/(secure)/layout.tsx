@@ -18,10 +18,10 @@ async function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="hero">
+    <>
       <Nav />
       <Alert />
       <div className="container is-fluid">{children}</div>
-    </div>
+    </>
   );
 }
