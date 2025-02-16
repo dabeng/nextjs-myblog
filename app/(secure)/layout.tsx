@@ -21,7 +21,9 @@ async function Layout({ children }: { children: React.ReactNode }) {
     <>
       <Nav />
       <Alert />
-      <div className="container is-fluid">{children}</div>
+      <div className="columns is-justify-content-center">
+        <div className="column is-6">{children}</div>
+      </div>
     </>
   );
 }

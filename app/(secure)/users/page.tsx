@@ -21,17 +21,17 @@ function Users() {
 
   return (
     <>
-      <h1>Users</h1>
-      <Link href="/users/add" className="btn btn-sm btn-success mb-2">
+      <h1 className="title">Users</h1>
+      <Link href="/users/add" className="button is-dark">
         Add User
       </Link>
-      <table className="table table-striped">
+      <table className="table table-striped" style={{"width": "100%"}}>
         <thead>
           <tr>
-            <th style={{ width: "30%" }}>First Name</th>
-            <th style={{ width: "30%" }}>Last Name</th>
-            <th style={{ width: "30%" }}>Username</th>
-            <th style={{ width: "10%" }}></th>
+            <th style={{ width: "25%" }}>First Name</th>
+            <th style={{ width: "25%" }}>Last Name</th>
+            <th style={{ width: "25%" }}>Username</th>
+            <th style={{ width: "25%" }}></th>
           </tr>
         </thead>
         <tbody>
@@ -49,15 +49,16 @@ function Users() {
           <td>{user.lastName}</td>
           <td>{user.username}</td>
           <td style={{ whiteSpace: "nowrap" }}>
+          <div className="buttons">
             <Link
               href={`/users/edit/${user.id}`}
-              className="btn btn-sm btn-primary me-1"
+              className="button is-dark is-small"
             >
               Edit
             </Link>
             <button
               onClick={() => userService.delete(user.id)}
-              className="btn btn-sm btn-danger btn-delete-user"
+              className="button is-light is-small"
               style={{ width: "60px" }}
               disabled={user.isDeleting}
             >
@@ -67,6 +68,7 @@ function Users() {
                 <span>Delete</span>
               )}
             </button>
+            </div>
           </td>
         </tr>
       ));
