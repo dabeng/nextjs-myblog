@@ -24,7 +24,7 @@ function Alert() {
 
   return (
     <div
-      className={`notificatiion ${
+      className={`notification ${
         alert.type === "alert-danger" ? "is-danger" : "is-success"
       }`}
     >

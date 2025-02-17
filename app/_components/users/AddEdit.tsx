@@ -59,7 +59,7 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h1>{title}</h1>
+      <h1 className="title">{title}</h1>
       <div className="field">
         <label className="label">First Name</label>
         <div className="control">
@@ -77,7 +77,7 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
           <input
             {...fields.lastName}
             type="text"
-            className={`form-control ${errors.lastName ? "is-danger" : ""}`}
+            className={`input ${errors.lastName ? "is-danger" : ""}`}
           />
         </div>
         <p className="help is-danger">{errors.lastName?.message?.toString()}</p>
@@ -88,7 +88,7 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
           <input
             {...fields.username}
             type="text"
-            className={`form-control ${errors.username ? "is-danger" : ""}`}
+            className={`input ${errors.username ? "is-danger" : ""}`}
           />
         </div>
         <p className="help is-danger">{errors.username?.message?.toString()}</p>
@@ -106,7 +106,7 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
           <input
             {...fields.password}
             type="password"
-            className={`form-control ${errors.password ? "is-danger" : ""}`}
+            className={`input ${errors.password ? "is-danger" : ""}`}
           />
         </div>
         <div className="help is-danger">
@@ -119,7 +119,7 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
           <button
             type="submit"
             disabled={formState.isSubmitting}
-            className="button is-link"
+            className="button is-dark"
           >
             {formState.isSubmitting && (
               <span className="icon">
@@ -134,7 +134,7 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
             onClick={() => reset()}
             type="button"
             disabled={formState.isSubmitting}
-            className="button is-link is-light"
+            className="button is-dark is-soft"
           >
             Reset
           </button>
