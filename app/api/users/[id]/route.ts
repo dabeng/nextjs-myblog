@@ -39,7 +39,7 @@ async function PUT(
       firstName: z.string(),
       lastName: z.string(),
       username: z.string(),
-      password: z.string().min(6)
+      password: z.union([z.string().min(6), z.literal("")])
     });
     await validateMiddleware(req, schema);
 
