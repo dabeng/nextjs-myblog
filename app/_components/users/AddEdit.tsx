@@ -59,7 +59,7 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h1 className="title">{title}</h1>
+      <h1 className="title mt-5">{title}</h1>
       <div className="field">
         <label className="label">First Name</label>
         <div className="control">

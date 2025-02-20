@@ -62,7 +62,7 @@ async function DELETE(
     await userService.delete((await params).id);
     // auto logout if deleted self
     if ((await params).id === req.headers.get("userId")) {
-      (await cookies()).delete("authorization");
+      (await cookies()).delete('authorization');
       return NextResponse.json({ deletedSelf: true });
     } else {
       return NextResponse.json({});

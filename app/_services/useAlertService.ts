@@ -6,7 +6,7 @@ export { useAlertService };
 interface IAlert {
   type: string;
   message: string;
-  showAfterRedirect: boolean;
+  showAfterRedirect: boolean;// TODO，看不出有什么用
 }
 
 interface IAlertStore {
