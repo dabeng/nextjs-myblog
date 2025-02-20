@@ -123,7 +123,7 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
           >
             {formState.isSubmitting && (
               <span className="icon">
-                <i className="fa-solid fa-circle-notch"></i>
+                <i className="fa-solid fa-circle-notch fa-spin"></i>
               </span>
             )}
             Save

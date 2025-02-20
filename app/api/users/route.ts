@@ -35,6 +35,7 @@ async function POST(req: NextRequest) {
 
     const body = await req.json();
     await userService.create(body);
+    return NextResponse.json({});
   } catch (err: any) {
     // global error handler
     return errorHandler(err);

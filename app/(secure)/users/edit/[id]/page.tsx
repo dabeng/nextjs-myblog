@@ -10,7 +10,7 @@ The edit user page renders the add/edit user component with the specified user s
 * is set to "edit" mode.
 */
 export default function Edit() {
-  const {id} = useParams<{id:string}>();
+  const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const userService = useUserService();
   const user = userService.user;
@@ -22,5 +22,7 @@ export default function Edit() {
     userService.getById(id);
   }, [router]);
 
-  return user ? <AddEdit title="Edit User" user={user} /> : <Spinner />;
+  return user ?
+    <AddEdit title="Edit User" user={user} /> :
+    <div style={{ "height": "600px", "fontSize": "64px" }}><Spinner /></div>;
 }

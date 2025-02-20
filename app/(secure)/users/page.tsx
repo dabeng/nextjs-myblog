@@ -77,7 +77,7 @@ function Users() {
     if (!users) {
       return (
         <tr>
-          <td colSpan={4}>
+          <td colSpan={4} style={{"height": "80px","fontSize": "64px"}}>
             <Spinner />
           </td>
         </tr>

@@ -64,6 +64,8 @@ async function DELETE(
     if ((await params).id === req.headers.get("userId")) {
       (await cookies()).delete("authorization");
       return NextResponse.json({ deletedSelf: true });
+    } else {
+      return NextResponse.json({});
     }
   } catch (err: any) {
     // global error handler

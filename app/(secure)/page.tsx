@@ -30,6 +30,6 @@ function Home() {
       </>
     );
   } else {
-    return <Spinner />;
+    return <div style={{"height": "600px", "fontSize": "64px"}}><Spinner /></div>
   }
 }
