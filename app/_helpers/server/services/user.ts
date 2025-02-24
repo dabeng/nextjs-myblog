@@ -67,8 +67,8 @@ async function update(id: string, params: any) {
 
   // copy params properties to user
   Object.assign(user, params);
-
-  await user.save();
+  const newUser = await user.save();
+  return newUser;
 }
 
 async function _delete(id: string) {

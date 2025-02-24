@@ -3,8 +3,12 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { useMutation,useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+
 
 import { useAlertService, useUserService } from "_services";
+import type { IUser } from "_services";
 /*
  * The users AddEdit component is used for both adding and editing users, it contains a form
  * built with the React Hook Form library and is used by the add user page and edit user page.
@@ -36,16 +40,38 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
     })
   };
 
+  const queryClient = useQueryClient();
+  const updateUserMutation = useMutation({
+    mutationFn: (data: IUser) => {
+      return userService.update(user.id, data);
+    },
+    onSuccess: (data) => {
+      // Instead of refetching any queries for that item and wasting a network call for data we already
+      // have, we can take advantage of the object returned by the mutation function and update the existing
+      // query with the new data immediately using the Query Client's setQueryData method.
+      queryClient.setQueryData(['user', user.id], data);
+    },
+  });
+
+  const createUserMutation = useMutation({
+    mutationFn: (data: IUser) => {
+      return userService.create(data);
+    },
+  })
+
+
   async function onSubmit(data: any) {
     alertService.clear();
     try {
       // create or update user based on user prop
       let message;
       if (user) {
-        await userService.update(user.id, data);
+        // await userService.update(user.id, data);
+        updateUserMutation.mutate(data);
         message = "User updated";
       } else {
-        await userService.create(data);
+        // await userService.create(data);
+        createUserMutation.mutate(data);
         message = "User added";
       }
 
