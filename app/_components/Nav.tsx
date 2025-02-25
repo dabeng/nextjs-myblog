@@ -44,7 +44,7 @@ function Nav() {
             <div className="buttons">
               <button
                 onClick={logout}
-                className="button is-dark is-soft"
+                className="button"
                 disabled={loggingOut}
               >
                 {loggingOut ? (

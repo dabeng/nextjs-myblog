@@ -32,7 +32,7 @@ interface IUserService extends IUserStore {
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (user: IUser) => Promise<void>;
-  getAll: () => Promise<void>;
+  getAll: () => Promise<[IUser]>;
   getById: (id: string) => Promise<IUser | null>;
   getCurrent: () => Promise<void>;
   create: (user: IUser) => Promise<void>;
@@ -89,9 +89,10 @@ function useUserService(): IUserService {
       }
     },
     getAll: async () => {
-      userStore.setState({ users: await fetch.get("/api/users") });
+      const response = await axios.get("/api/users");
+      return response.data;
     },
-    getById: async (id:string):Promise<IUser | null> => {
+    getById: async (id: string): Promise<IUser | null> => {
       try {
         const response = await axios.get(`/api/users/${id}`);
         return response.data;
@@ -112,15 +113,14 @@ function useUserService(): IUserService {
       return axios.post('/api/users', user);
     },
     update: async (id, params) => {
+      await axios.put(`/api/users/${id}`, params);
+
       // update current user if the user updated their own record
       if (id === currentUser?.id) {
         userStore.setState({
           currentUser: { ...currentUser, ...params }
         });
       }
-
-      const response = await axios.put(`/api/users/${id}`, params);
-      return response.data;
     },
     delete: async id => {
       // set isDeleting prop to true on user

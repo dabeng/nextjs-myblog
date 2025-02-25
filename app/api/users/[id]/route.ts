@@ -44,8 +44,8 @@ async function PUT(
     await validateMiddleware(req, schema);
 
     const body = await req.json();
-    const newUser = await userService.update((await params).id, body);
-    return NextResponse.json(newUser);
+    await userService.update((await params).id, body);
+    return NextResponse.json({});
   } catch (err: any) {
     // global error handler
     return errorHandler(err);

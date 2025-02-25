@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useMutation,useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-
 
 import { useAlertService, useUserService } from "_services";
 import type { IUser } from "_services";
@@ -45,11 +43,10 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
     mutationFn: (data: IUser) => {
       return userService.update(user.id, data);
     },
-    onSuccess: (data) => {
-      // Instead of refetching any queries for that item and wasting a network call for data we already
-      // have, we can take advantage of the object returned by the mutation function and update the existing
-      // query with the new data immediately using the Query Client's setQueryData method.
-      queryClient.setQueryData(['user', user.id], data);
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ['users', 'detail', user.id]
+      });
     },
   });
 
@@ -57,24 +54,25 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
     mutationFn: (data: IUser) => {
       return userService.create(data);
     },
-  })
-
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ['users', 'list']
+      });
+    },
+  });
 
   async function onSubmit(data: any) {
-    alertService.clear();
     try {
+      alertService.clear();
       // create or update user based on user prop
       let message;
       if (user) {
-        // await userService.update(user.id, data);
-        updateUserMutation.mutate(data);
+        await updateUserMutation.mutateAsync(data);
         message = "User updated";
       } else {
-        // await userService.create(data);
-        createUserMutation.mutate(data);
+        await createUserMutation.mutateAsync(data);
         message = "User added";
       }
-
       // redirect to user list with success message
       router.push("/users");
       alertService.success(message, true);
@@ -147,12 +145,12 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
             disabled={formState.isSubmitting}
             className="button is-dark"
           >
+            Save
             {formState.isSubmitting && (
-              <span className="icon">
+              <span className="icon ml-0">
                 <i className="fa-solid fa-circle-notch fa-spin"></i>
               </span>
             )}
-            Save
           </button>
         </div>
         <div className="control">
@@ -160,7 +158,7 @@ function AddEdit({ title, user }: { title: string; user?: any }) {
             onClick={() => reset()}
             type="button"
             disabled={formState.isSubmitting}
-            className="button is-dark is-soft"
+            className="button"
           >
             Reset
           </button>

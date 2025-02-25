@@ -23,7 +23,7 @@ function Alert() {
   if (!alert) return null;
 
   return (
-    <div
+    <div style={{"position": "fixed", "width": "100%"}}
       className={`notification ${
         alert.type === "alert-danger" ? "is-danger" : "is-success"
       }`}

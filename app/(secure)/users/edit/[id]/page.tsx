@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { AddEdit } from "_components/users";
@@ -15,7 +14,7 @@ export default function Edit() {
   const userService = useUserService();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["user", id],
+    queryKey: ["users", 'detail', id],
     queryFn: () => userService.getById(id)
   });
 
