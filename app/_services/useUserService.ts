@@ -19,7 +19,7 @@ interface IUser {
   lastName: string;
   username: string;
   password: string;
-  isDeleting?: boolean; // TODOremove it
+  // isDeleting?: boolean; // TODOremove it
 }
 
 interface IUserStore {
@@ -124,23 +124,24 @@ function useUserService(): IUserService {
     },
     delete: async id => {
       // set isDeleting prop to true on user
-      userStore.setState({
-        users: users!.map(x => {
-          if (x.id === id) {
-            x.isDeleting = true;
-          }
-          return x;
-        })
-      });
+      // userStore.setState({
+      //   users: users!.map(x => {
+      //     if (x.id === id) {
+      //       x.isDeleting = true;
+      //     }
+      //     return x;
+      //   })
+      // });
 
       // delete user
-      const response = await fetch.delete(`/api/users/${id}`);
+      // const response = await fetch.delete(`/api/users/${id}`);
+      const response = await axios.delete(`/api/users/${id}`);
 
       // remove deleted user from state
-      userStore.setState({ users: users!.filter(x => x.id !== id) });
+      // userStore.setState({ users: users!.filter(x => x.id !== id) });
 
       // logout if the user deleted their own record
-      if (response.deletedSelf) {
+      if (response.data.deletedSelf) {
         router.push("/account/login");
       }
     }

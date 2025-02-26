@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Spinner } from "_components";
-import { useUserService } from "_services";
+import { useAlertService, useUserService } from "_services";
 import type { IUser } from "_services";
 /*
  * The users list page displays a list of all users in the Next.js tutorial app and
@@ -13,12 +14,37 @@ import type { IUser } from "_services";
 export default Users;
 
 function Users() {
+  const [ deletedUserId, setDeletedUserId ] = useState('');
+  const alertService = useAlertService();
   const userService = useUserService();
 
   const { data: users, error, isPending, isSuccess } = useQuery({
     queryKey: ["users", 'list'],
     queryFn: () => userService.getAll()
   });
+
+  const queryClient = useQueryClient();
+  const deleteUserMutation = useMutation({
+    mutationFn: (id: string) => {
+      return userService.delete(id);
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ['users', 'list']
+      });
+    },
+  });
+
+  async function deleteUser(id: string) {
+    try {
+      setDeletedUserId(id);
+      alertService.clear();
+      await deleteUserMutation.mutateAsync(id);
+      alertService.success(`User(${id}) has been deleted`, true);
+    } catch (error: any) {
+      alertService.error(error);
+    }
+  }
 
   return (
     <>
@@ -87,15 +113,16 @@ function Users() {
               Edit
             </Link>
             <button
-              onClick={() => userService.delete(user.id)}
+              onClick={() => deleteUser(user.id)}
               className="button is-small"
               style={{ width: "60px" }}
-              disabled={user.isDeleting}
+              disabled={deletedUserId === user.id && deleteUserMutation.isPending}
             >
-              {user.isDeleting ? (
-                <span className="spinner-border spinner-border-sm"></span>
-              ) : (
                 <span>Delete</span>
+              {deletedUserId === user.id && deleteUserMutation.isPending && (
+              <span className="icon ml-0">
+                <i className="fa-solid fa-circle-notch fa-spin"></i>
+              </span>
               )}
             </button>
           </div>
