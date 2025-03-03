@@ -1,6 +1,7 @@
 import axios from "axios";
 import { object, string } from "zod";
 import NextAuth from "next-auth";
+import 'next-auth/jwt';
 import Credentials from "next-auth/providers/credentials";
 
 
@@ -14,7 +15,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: {},
       },
       authorize: async (credentials) => {
-        // Add logic here to look up the user from the credentials supplied
         // Any object returned will be saved in `user` property of the JWT callback
         try {
           const loginSchema = object({
@@ -23,7 +23,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
           const { username, password } = await loginSchema.parseAsync(credentials);
 
-          return await axios.post('/api/auth/login', { username, password });
+          const response = await axios.post('/api/auth/login', { username, password });
+          return response.data;
         } catch (error) {
           throw new Error('Authentication failed');
         }
@@ -35,10 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 30 * 24 * 60 * 60 // 30 days
   },
   callbacks: {
-    // This callback is called whenever a JSON Web Token is created (i.e. at sign in) or updated
-    // (i.e whenever a session is accessed in the client). The returned value will be encrypted,
-    // and it is stored in a cookie.
-    jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, trigger, session }) {
       if (trigger === 'update') {
         return {
           ...token,
@@ -46,29 +44,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           refreshToken: session.refreshToken
         }
       }
-      
       if (user) {
         return {
           ...token,
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
-          email: user.email,
-          name: user.name
         }
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       return {
         ...session,
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
-        user: {
-          id: token.sub!,
-          email: token.email!,
-          name: token.name
-        }
       }
     }
   }
 });
+
+declare module "next-auth" {
+  interface User {
+    accessToken: string;
+    refreshToken: string;
+  }
+}
+
+declare module 'next-auth' {
+  interface Session {
+    accessToken?: string
+    refreshToken?: string
+  }
+}
+ 

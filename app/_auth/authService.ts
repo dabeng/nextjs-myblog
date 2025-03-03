@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { cookies } from 'next/headers';
 import { User } from './userModel';
-import NextAuth from "next-auth";
+import { useSession, signOut } from 'next-auth/react';
+import axios from "axios";
 
 /* --- Auth Helper ---
  * The auth helper is used to verify the JWT token in the request 'authorization' cookie.
@@ -24,7 +24,7 @@ export const authService = {
  * @param password The password of the user
  * @returns A BackendJWT response from the backend.
  */
-export async function login({ username, password }: { username: string, password: string }) {
+async function login({ username, password }: { username: string, password: string }) {
   if (!username) {
     throw new Error("Email is required");
   }
@@ -56,24 +56,26 @@ export async function login({ username, password }: { username: string, password
  * @param token The current refresh token
  * @returns A BackendAccessJWT response from the backend.
  */
-export async function refresh(token: string): Promise<Response> {
-  if (!token) {
-    throw new Error("Token is required");
-  }
-  // Verify that the token is valid and not expired
+async function refresh(): Promise<Response> {
   try {
-    jwt.verify(token, process.env.JWT_SECRET!);
-  } catch (err) {
-    throw new Error("Refresh token expired");
+    const { data: session, update } = useSession();
+    const response = await axios.post('/auth/refresh', {
+      refreshToken: session?.refreshToken
+    });
+
+    // Implement refresh token rotation
+    if (response.data.newRefreshToken) {
+      await update({
+        ...session,
+        refreshToken: response.data.newRefreshToken
+      })
+    }
+
+    return response.data.accessToken;
+  } catch (error) {
+    // Handle token compromise
+    await signOut();
+    throw new Error('Failed to refresh token');
   }
 
-  return new Response(JSON.stringify({
-    access: jwt.sign({ ...user }, process.env.JWT_SECRET!, { expiresIn: '5s' }),
-  }), {
-    status: 200,
-    statusText: "OK",
-    headers: {
-      "Content-type": "application/json"
-    }
-  });
 }

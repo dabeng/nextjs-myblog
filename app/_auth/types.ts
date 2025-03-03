@@ -1,8 +1,9 @@
+export type {AuthTokens};
+
 interface User {
   id: string;
   username: string;
 }
-
 interface AuthTokens {
   accessToken: string;
   refreshToken: string;
@@ -20,3 +21,4 @@ interface Session extends AuthTokens {
 interface JWT extends AuthTokens {
   sub: string;
 }
+
