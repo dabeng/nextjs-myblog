@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import {
   authService,
-} from "_auth/authService";
+} from "@/_auth/authService";
 import {
     errorHandler,
   } from "_helpers/server";

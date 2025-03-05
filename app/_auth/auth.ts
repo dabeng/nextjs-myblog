@@ -16,6 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         // Any object returned will be saved in `user` property of the JWT callback
+        // FYI, https://authjs.dev/reference/core/providers/credentials#authorize
         try {
           const loginSchema = object({
             username: string(),
@@ -32,10 +33,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   session: {
+    // FYI, https://authjs.dev/concepts/session-strategies
     strategy: 'jwt',
+    // How long until an idle session expires and is no longer valid.
     maxAge: 30 * 24 * 60 * 60 // 30 days
   },
   callbacks: {
+    // FYI, https://next-auth.js.org/configuration/callbacks#jwt-callback
     async jwt({ token, user, trigger, session }) {
       if (trigger === 'update') {
         return {
@@ -53,6 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
+    // FYI, https://next-auth.js.org/configuration/callbacks#session-callback
     async session({ session, token }) {
       return {
         ...session,

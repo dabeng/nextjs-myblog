@@ -1,5 +1,3 @@
-
-import { authService } from "_auth/authService";
 import jwt from 'jsonwebtoken';
 import {
   errorHandler,
