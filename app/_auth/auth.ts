@@ -1,9 +1,11 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { object, string } from "zod";
 import NextAuth from "next-auth";
+import type { User } from "next-auth";
 import 'next-auth/jwt';
+import type { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
-
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -25,7 +27,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const { username, password } = await loginSchema.parseAsync(credentials);
 
           const response = await axios.post('/api/auth/login', { username, password });
-          return response.data;
+
+          return {
+            ...response.data,
+            accessExp: jwtDecode(response.data.accessToken).exp,
+            refreshExp: jwtDecode(response.data.refreshToken).exp,
+          } as User;
         } catch (error) {
           throw new Error('Authentication failed');
         }
@@ -40,22 +47,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     // FYI, https://next-auth.js.org/configuration/callbacks#jwt-callback
-    async jwt({ token, user, trigger, session }) {
-      if (trigger === 'update') {
-        return {
-          ...token,
-          accessToken: session.accessToken,
-          refreshToken: session.refreshToken
-        }
-      }
-      if (user) {
+    async jwt({ token, user, trigger, session, account }) {
+      // Initial signin contains a 'User' object from authorize method
+      if (user && account) {
         return {
           ...token,
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
-        }
+        };
       }
-      return token;
+
+      // The current access token is still valid
+      if (Date.now() < token.accessExp * 1000) {
+        return token;
+      }
+
+           // The refresh token is still valid
+           if (Date.now() < token.refreshExp * 1000) {
+            return await refreshAccessToken(token);
+          }
+
+      // The current access token and refresh token have both expired
+      // This should not really happen unless you get really unlucky with
+      // the timing of the token expiration because the middleware should
+      // have caught this case before the callback is called
+      return { ...token } as JWT;
     },
     // FYI, https://next-auth.js.org/configuration/callbacks#session-callback
     async session({ session, token }) {
@@ -72,6 +88,8 @@ declare module "next-auth" {
   interface User {
     accessToken: string;
     refreshToken: string;
+    accessExp: number;
+    refreshExp: number;
   }
 }
 
@@ -81,4 +99,12 @@ declare module 'next-auth' {
     refreshToken?: string
   }
 }
- 
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    accessToken: string;
+    refreshToken: string;
+    accessExp: number;
+    refreshExp: number;
+  }
+}
