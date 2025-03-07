@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import { useUserService } from "_services";
+import { signIn } from "@/_auth/auth";
 
 export default Login;
 
@@ -23,8 +24,13 @@ function Login() {
     await userService.login(username, password);
   }
 
+  const credentialsAction = (formData: FormData) => {
+    signIn("credentials", formData)
+  }
+
   return (
-    <form className="box" onSubmit={handleSubmit(onSubmit)}>
+    // <form className="box" onSubmit={handleSubmit(onSubmit)}>
+    <form action={credentialsAction}>
       <div className="field">
         <label className="label">Username</label>
         <div className="control">
