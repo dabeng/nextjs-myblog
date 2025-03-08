@@ -39,6 +39,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  pages: {
+    signIn: '/login2'
+  },
   session: {
     // FYI, https://authjs.dev/concepts/session-strategies
     strategy: 'jwt',

@@ -9,7 +9,7 @@ export default Layout;
 async function Layout({ children }: { children: React.ReactNode }) {
   // if logged in redirect to home page
   if (await authService.isAuthenticated()) {
-    redirect("/");
+    // redirect("/");
   }
 
   return (
