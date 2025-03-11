@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import { User } from './userModel';
 import { useSession, signOut } from 'next-auth/react';
 import axios from "axios";
+import type { JWT } from "next-auth/jwt";
+import { errorHandler } from '@/_helpers/server';
 
 /* --- Auth Helper ---
  * The auth helper is used to verify the JWT token in the request 'authorization' cookie.
@@ -56,26 +58,28 @@ async function login({ username, password }: { username: string, password: strin
  * @param token The current refresh token
  * @returns A BackendAccessJWT response from the backend.
  */
-async function refresh(): Promise<Response> {
+async function refresh(refreshToken:string): Promise<string> {
   try {
     const { data: session, update } = useSession();
-    const response = await axios.post('/auth/refresh', {
-      refreshToken: session?.refreshToken
-    });
+
+    // Verify that the token is valid and not expired
+      const decoded = jwt.verify(refreshToken, process.env.AUTH_SECRET!);
+      const id = decoded.sub as string;
+
 
     // Implement refresh token rotation
-    if (response.data.newRefreshToken) {
-      await update({
-        ...session,
-        refreshToken: response.data.newRefreshToken
-      })
-    }
+    // if (response.data.newRefreshToken) {
+    //   await update({
+    //     ...session,
+    //     refreshToken: response.data.newRefreshToken
+    //   })
+    // }
 
-    return response.data.accessToken;
+    return jwt.sign({ sub: id }, process.env.AUTH_SECRET!, { expiresIn: '5s' });
   } catch (error) {
     // Handle token compromise
     await signOut();
-    throw new Error('Failed to refresh token');
+    throw errorHandler(new Error('Failed to refresh token'));
   }
 
 }

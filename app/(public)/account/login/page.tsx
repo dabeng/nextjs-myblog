@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import { useUserService } from "_services";
-import { signIn } from "@/auth";
+// import { signIn } from "@/auth";
+import { signIn } from "next-auth/react";
 
 export default Login;
 
@@ -24,8 +25,8 @@ function Login() {
     await userService.login(username, password);
   }
 
-  const credentialsAction = (formData: FormData) => {
-    signIn("credentials", formData)
+  const credentialsAction = (formData: any) => {
+    signIn("credentials", formData);
   }
 
   return (
@@ -35,7 +36,9 @@ function Login() {
         <label className="label">Username</label>
         <div className="control">
           <input
-            {...fields.username}
+            // {...fields.username}
+            id="username"
+            name="username"
             type="text"
             className={`input ${errors.username ? "is-danger" : ""}`}
           />
@@ -46,7 +49,9 @@ function Login() {
         <label className="label">Password</label>
         <div className="control">
           <input
-            {...fields.password}
+            // {...fields.password}
+            id="password"
+            name="password"
             type="password"
             className={`input ${errors.password ? "is-invalid" : ""}`}
           />

@@ -40,7 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   pages: {
-    signIn: '/login2'
+    signIn: '(public)/account/login'
   },
   session: {
     // FYI, https://authjs.dev/concepts/session-strategies
@@ -57,6 +57,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           ...token,
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
+          accessExp: user.accessExp,
+          refreshExp: user.refreshExp,
         };
       }
 
@@ -67,7 +69,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       // The refresh token is still valid
       if (Date.now() < token.refreshExp * 1000) {
-        return await axios.post('/auth/refresh', token.refreshToken);
+        return await axios.post('/auth/refresh', token);
       }
 
       // The current access token and refresh token have both expired
@@ -82,6 +84,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         ...session,
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
+        accessExp: token.accessExp,
+        refreshExp: token.refreshExp,
       }
     }
   }
@@ -98,8 +102,10 @@ declare module "next-auth" {
 
 declare module 'next-auth' {
   interface Session {
-    accessToken?: string
-    refreshToken?: string
+    accessToken?: string;
+    refreshToken?: string;
+    accessExp: number;
+    refreshExp: number;
   }
 }
 
