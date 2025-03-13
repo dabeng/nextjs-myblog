@@ -5,7 +5,15 @@ import { useForm } from "react-hook-form";
 
 import { useUserService } from "_services";
 // import { signIn } from "@/auth";
+
+
+
+import { useSearchParams, useRouter } from "next/navigation";
+import type { SignInResponse } from "next-auth/react";
 import { signIn } from "next-auth/react";
+
+import credentialsAction from "@/_auth/credentialsAction";
+
 
 export default Login;
 
@@ -22,12 +30,43 @@ function Login() {
   };
 
   async function onSubmit({ username, password }: any) {
+    const callbackUrl = searchParams.get("callbackUrl");
     await userService.login(username, password);
+
   }
 
-  const credentialsAction = (formData: any) => {
-    signIn("credentials", formData);
-  }
+  // const credentialsAction = (formData: any) => {
+  //   signIn("credentials", formData);
+  // }
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  // async function credentialsAction(formData: any) { // whatever your type
+  //   const callbackUrl = searchParams.get("callbackUrl")
+  //   signIn("credentials", formData)
+  //     .then((res: SignInResponse | undefined) => {
+  //       if (!res) {
+  //         alert("No response!")
+  //         return
+  //       }
+
+  //       if (!res.ok)
+  //         alert("Something went wrong!")
+  //       else if (res.error) {
+  //         console.log(res.error)
+
+  //         if (res.error == "CallbackRouteError")
+  //           alert("Could not login! Please check your credentials.")
+  //         else
+  //           alert(`Internal Server Error: ${res.error}`)
+  //       } else {
+  //         if (callbackUrl)
+  //           router.push(callbackUrl)
+  //         else
+  //           router.push("/")
+  //       }
+  //     })
+  // }
 
   return (
     // <form className="box" onSubmit={handleSubmit(onSubmit)}>
@@ -36,9 +75,7 @@ function Login() {
         <label className="label">Username</label>
         <div className="control">
           <input
-            // {...fields.username}
-            id="username"
-            name="username"
+            {...fields.username}
             type="text"
             className={`input ${errors.username ? "is-danger" : ""}`}
           />
@@ -49,9 +86,7 @@ function Login() {
         <label className="label">Password</label>
         <div className="control">
           <input
-            // {...fields.password}
-            id="password"
-            name="password"
+            {...fields.password}
             type="password"
             className={`input ${errors.password ? "is-invalid" : ""}`}
           />

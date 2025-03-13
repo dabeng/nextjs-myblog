@@ -43,8 +43,8 @@ async function login({ username, password }: { username: string, password: strin
 
   return {
     ...user.toJSON(),
-    accessToken: jwt.sign({ sub: user.id }, process.env.JWT_SECRET!, { expiresIn: '5s' }),
-    refreshToken: jwt.sign({ sub: user.id }, process.env.JWT_SECRET!, { expiresIn: '2m' })
+    accessToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '5m' }),
+    refreshToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '50m' })
   };
 }
 

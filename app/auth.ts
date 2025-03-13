@@ -6,6 +6,7 @@ import type { User } from "next-auth";
 import 'next-auth/jwt';
 import type { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
+import jwt from 'jsonwebtoken';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -26,7 +27,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
           const { username, password } = await loginSchema.parseAsync(credentials);
 
-          const response = await axios.post('/api/auth/login', { username, password });
+          // const response = await axios.post('/api/auth/login', { username, password });
+          const response = {
+            data:  {
+                username: 'xuebin',
+                accessToken: jwt.sign({ sub: '67b140d657426afa57377504' }, process.env.AUTH_SECRET!, { expiresIn: '5s' }),
+                refreshToken: jwt.sign({ sub: '67b140d657426afa57377504' }, process.env.AUTH_SECRET!, { expiresIn: '2m' })
+              }
+          };
 
           return {
             ...response.data,
@@ -39,6 +47,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  // secret: process.env.AUTH_SECRET,
   pages: {
     signIn: '(public)/account/login'
   },

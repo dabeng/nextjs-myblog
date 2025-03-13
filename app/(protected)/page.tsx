@@ -16,7 +16,7 @@ function Home() {
   const user = userService.currentUser;
 
   useEffect(() => {
-    userService.getCurrent();
+    // userService.getCurrent();
   }, []);
 
   if (user) {
