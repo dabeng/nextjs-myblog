@@ -6,6 +6,9 @@ import type { User } from "next-auth";
 import 'next-auth/jwt';
 import type { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
+import {
+  authService,
+} from "@/_auth/authService";
 import jwt from 'jsonwebtoken';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -27,14 +30,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
           const { username, password } = await loginSchema.parseAsync(credentials);
 
-          // const response = await axios.post('/api/auth/login', { username, password });
-          const response = {
-            data:  {
-                username: 'xuebin',
-                accessToken: jwt.sign({ sub: '67b140d657426afa57377504' }, process.env.AUTH_SECRET!, { expiresIn: '5s' }),
-                refreshToken: jwt.sign({ sub: '67b140d657426afa57377504' }, process.env.AUTH_SECRET!, { expiresIn: '2m' })
-              }
-          };
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`, { username, password });
+          // const response = await authService.login({ username, password });
+          // const response = {
+          //   data:  {
+          //       username: 'xuebin',
+          //       accessToken: jwt.sign({ sub: '67b140d657426afa57377504' }, process.env.AUTH_SECRET!, { expiresIn: '5s' }),
+          //       refreshToken: jwt.sign({ sub: '67b140d657426afa57377504' }, process.env.AUTH_SECRET!, { expiresIn: '2m' })
+          //     }
+          // };
 
           return {
             ...response.data,
@@ -64,6 +68,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user && account) {
         return {
           ...token,
+          user: { id: user.id, username: user.username },
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
           accessExp: user.accessExp,
@@ -91,6 +96,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       return {
         ...session,
+        user: token.user,
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
         accessExp: token.accessExp,
@@ -102,6 +108,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 declare module "next-auth" {
   interface User {
+    username: string;
     accessToken: string;
     refreshToken: string;
     accessExp: number;
@@ -111,6 +118,7 @@ declare module "next-auth" {
 
 declare module 'next-auth' {
   interface Session {
+    user: User;
     accessToken?: string;
     refreshToken?: string;
     accessExp: number;

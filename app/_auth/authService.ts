@@ -2,8 +2,6 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { User } from './userModel';
 import { useSession, signOut } from 'next-auth/react';
-import axios from "axios";
-import type { JWT } from "next-auth/jwt";
 import { errorHandler } from '@/_helpers/server';
 
 /* --- Auth Helper ---

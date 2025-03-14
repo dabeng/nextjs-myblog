@@ -1,28 +1,30 @@
-"use client";
+
 
 import Link from "next/link";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
-import { useUserService } from "_services";
+// import { useUserService } from "_services";
 import { Spinner } from "_components";
+import { auth } from "@/auth";
 /*
  * The home page is a simple React component that displays a welcome message with the
  * logged in user's name and a link to the users section.
  */
 export default Home;
 
-function Home() {
-  const userService = useUserService();
-  const user = userService.currentUser;
+async function Home() {
+  // const userService = useUserService();
+  // const user = userService.currentUser;
+  const session = await auth();
 
-  useEffect(() => {
+  // useEffect(() => {
     // userService.getCurrent();
-  }, []);
+  // }, []);
 
-  if (user) {
+  if (session?.user) {
     return (
       <>
-        <h1>Hi {user.firstName}!</h1>
+        <h1>Hi {session.user.username}!</h1>
         <p>You&apos;re logged in with Next.js & JWT!!</p>
         <p>
           <Link href="/users">Manage Users</Link>

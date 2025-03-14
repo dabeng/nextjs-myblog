@@ -1,4 +1,4 @@
-import { model, models, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 export { User };
 
@@ -21,5 +21,5 @@ schema.set('toJSON', {
   }
 });
 
-const User = models.User || model('User', schema);
+const User = mongoose.models?.User || mongoose.model('User', schema);
 
