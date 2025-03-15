@@ -51,10 +51,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  // secret: process.env.AUTH_SECRET,
-  pages: {
-    signIn: '(public)/account/login'
-  },
   session: {
     // FYI, https://authjs.dev/concepts/session-strategies
     strategy: 'jwt',
