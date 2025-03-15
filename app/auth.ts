@@ -14,12 +14,6 @@ import jwt from 'jsonwebtoken';
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // credentials: {
-      //   username: {},
-      //   password: {},
-      // },
       authorize: async (credentials) => {
         // Any object returned will be saved in `user` property of the JWT callback
         // FYI, https://authjs.dev/reference/core/providers/credentials#authorize
@@ -31,14 +25,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const { username, password } = await loginSchema.parseAsync(credentials);
 
           const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`, { username, password });
-          // const response = await authService.login({ username, password });
-          // const response = {
-          //   data:  {
-          //       username: 'xuebin',
-          //       accessToken: jwt.sign({ sub: '67b140d657426afa57377504' }, process.env.AUTH_SECRET!, { expiresIn: '5s' }),
-          //       refreshToken: jwt.sign({ sub: '67b140d657426afa57377504' }, process.env.AUTH_SECRET!, { expiresIn: '2m' })
-          //     }
-          // };
 
           return {
             ...response.data,
