@@ -12,7 +12,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import type { SignInResponse } from "next-auth/react";
 import { signIn } from "next-auth/react";
 
-import credentialsAction from "@/_auth/credentialsAction";
+import { loginAction } from "@/_auth/actions";
 
 
 export default Login;
@@ -70,7 +70,7 @@ function Login() {
 
   return (
     // <form className="box" onSubmit={handleSubmit(onSubmit)}>
-    <form action={credentialsAction}>
+    <form action={loginAction}>
       <div className="field">
         <label className="label">Username</label>
         <div className="control">

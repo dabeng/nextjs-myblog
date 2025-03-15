@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { NavLink } from "_components";
 import { useUserService } from "_services";
-import logoutAction from "@/_auth/logoutAction";
+import { logoutAction } from "@/_auth/actions";
 
 export { Nav };
 

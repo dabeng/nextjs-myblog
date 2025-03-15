@@ -16,10 +16,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
-      credentials: {
-        username: {},
-        password: {},
-      },
+      // credentials: {
+      //   username: {},
+      //   password: {},
+      // },
       authorize: async (credentials) => {
         // Any object returned will be saved in `user` property of the JWT callback
         // FYI, https://authjs.dev/reference/core/providers/credentials#authorize
