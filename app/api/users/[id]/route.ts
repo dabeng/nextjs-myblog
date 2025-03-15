@@ -20,7 +20,6 @@ async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await jwtMiddleware(req);
     const user = await userService.getById((await params).id);
     return NextResponse.json(user);
   } catch (err: any) {
@@ -34,7 +33,6 @@ async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await jwtMiddleware(req);
     const schema = z.object({
       firstName: z.string(),
       lastName: z.string(),
@@ -57,8 +55,6 @@ async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await jwtMiddleware(req);
-
     await userService.delete((await params).id);
     // auto logout if deleted self
     if ((await params).id === req.headers.get("userId")) {

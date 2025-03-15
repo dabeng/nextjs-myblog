@@ -14,8 +14,6 @@ import {
 
 export async function GET(req: NextRequest) {
   try {
-    await jwtMiddleware(req);
-
     const user = await userService.getCurrent();
     return NextResponse.json(user);
   } catch (err: any) {

@@ -12,8 +12,6 @@ export { GET, POST };
 
 async function GET(req: NextRequest) {
   try {
-    await jwtMiddleware(req);
-
     const users = await userService.getAll();
     return NextResponse.json(users);
   } catch (err: any) {
@@ -24,7 +22,6 @@ async function GET(req: NextRequest) {
 
 async function POST(req: NextRequest) {
   try {
-    await jwtMiddleware(req);
     const schema = z.object({
       firstName: z.string(),
       lastName: z.string(),
