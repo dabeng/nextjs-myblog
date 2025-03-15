@@ -4,18 +4,11 @@ import { useState } from "react";
 
 import { NavLink } from "_components";
 import { useUserService } from "_services";
+import logoutAction from "@/_auth/logoutAction";
 
 export { Nav };
 
 function Nav() {
-  const [loggingOut, setLoggingOut] = useState<boolean>(false);
-  const userService = useUserService();
-
-  async function logout() {
-    setLoggingOut(true);
-    await userService.logout();
-  }
-
   return (
     <nav className="navbar is-dark">
       <div className="navbar-brand">
@@ -43,15 +36,10 @@ function Nav() {
           <div className="navbar-item">
             <div className="buttons">
               <button
-                onClick={logout}
+                onClick={logoutAction}
                 className="button"
-                disabled={loggingOut}
               >
-                {loggingOut ? (
-                  <span className="spinner-border spinner-border-sm"></span>
-                ) : (
                   <span>Log out</span>
-                )}
               </button>
             </div>
           </div>
