@@ -30,14 +30,14 @@ function Register() {
 
   return (
     <form className="box" onSubmit={handleSubmit(onSubmit)}>
-      <h4>Register</h4>
+      <h4 className="title is-4">Register a new user</h4>
       <div className="field">
         <label className="label">First Name</label>
         <div className="control">
           <input
             {...fields.firstName}
             type="text"
-            className={`form-control ${errors.firstName ? "is-danger" : ""}`}
+            className={`input ${errors.firstName ? "is-danger" : ""}`}
           />
         </div>
         <div className="help is-danger">
@@ -50,7 +50,7 @@ function Register() {
           <input
             {...fields.lastName}
             type="text"
-            className={`form-control ${errors.lastName ? "is-invalid" : ""}`}
+            className={`input ${errors.lastName ? "is-invalid" : ""}`}
           />
         </div>
         <div className="help is-danger">
@@ -63,7 +63,7 @@ function Register() {
           <input
             {...fields.username}
             type="text"
-            className={`form-control ${errors.username ? "is-danger" : ""}`}
+            className={`input ${errors.username ? "is-danger" : ""}`}
           />
         </div>
         <div className="help is-danger">
@@ -76,7 +76,7 @@ function Register() {
           <input
             {...fields.password}
             type="password"
-            className={`form-control ${errors.password ? "is-danger" : ""}`}
+            className={`input ${errors.password ? "is-danger" : ""}`}
           />
         </div>
         <div className="help is-danger">
