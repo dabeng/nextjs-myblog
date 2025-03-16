@@ -3,12 +3,19 @@
 import { useState } from "react";
 
 import { NavLink } from "_components";
-import { useUserService } from "_services";
+// import { useUserService } from "_services";
 import { logoutAction } from "@/_auth/actions";
 
 export { Nav };
 
 function Nav() {
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function logoutHandler() {
+    setLoggingOut(true);
+    await logoutAction();
+  }
+
   return (
     <nav className="navbar is-dark">
       <div className="navbar-brand">
@@ -23,7 +30,7 @@ function Nav() {
         </div>
       </div>
       <div className="navbar-menu">
-        <div className="navbar-start" style={{"fontSize": "1.125rem"}}>
+        <div className="navbar-start" style={{ "fontSize": "1.125rem" }}>
           <NavLink href="/" exact className="navbar-item">
             Home
           </NavLink>
@@ -36,10 +43,17 @@ function Nav() {
           <div className="navbar-item">
             <div className="buttons">
               <button
-                onClick={logoutAction}
+                onClick={logoutHandler}
                 className="button"
+                disabled={loggingOut}
               >
+                {loggingOut ? (
+                  <span className="icon">
+                    <i className="fa-solid fa-circle-notch fa-spin"></i>
+                  </span>
+                ) : (
                   <span>Log out</span>
+                )}
               </button>
             </div>
           </div>
