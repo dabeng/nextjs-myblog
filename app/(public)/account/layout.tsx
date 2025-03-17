@@ -1,7 +1,4 @@
-import React, { useEffect } from 'react';
-import { redirect } from "next/navigation";
-
-import { authService } from "_helpers/server";
+import React from 'react';
 import { Alert, Logo } from "_components";
 
 export default Layout;

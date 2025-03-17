@@ -73,7 +73,7 @@ async function refresh(refreshToken:string): Promise<string> {
     //   })
     // }
 
-    return jwt.sign({ sub: id }, process.env.AUTH_SECRET!, { expiresIn: '5s' });
+    return jwt.sign({ sub: id }, process.env.AUTH_SECRET!, { expiresIn: '5m' });
   } catch (error) {
     // Handle token compromise
     await signOut();
