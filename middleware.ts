@@ -15,11 +15,15 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/account/login", req.nextUrl.origin));
   }
 
+  if (req.auth && publicRoutes.some((route) => route === req.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL("/", req.nextUrl.origin));
+  }
+
   // If authenticated, continue with the request
   return NextResponse.next();
 });
 
 // Authenticate all routes except for /api, /_next/static, /_next/image, and .png files
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|account/login).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
