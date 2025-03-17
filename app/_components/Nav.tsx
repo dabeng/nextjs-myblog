@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import { NavLink } from "_components";
-// import { useUserService } from "_services";
 import { logoutAction } from "@/_auth/actions";
 
 export { Nav };
@@ -20,7 +19,7 @@ function Nav() {
     <nav className="navbar is-dark">
       <div className="navbar-brand">
         <a className="navbar-item" href="https://github.com/dabeng" target="_blank">
-          <img src="https://dabeng.github.io/OrgChart/img/logo.png" />
+          <img src="/logo.png" />
         </a>
         <div className="navbar-burger js-burger" data-target="navMenuColordark-example">
           <span></span>
