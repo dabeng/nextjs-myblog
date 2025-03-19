@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
-import { useUserService } from "_services";
+import { useUserService, useAlertService } from "_services";
 // import { signIn } from "@/auth";
 
 
@@ -13,12 +13,14 @@ import type { SignInResponse } from "next-auth/react";
 import { signIn } from "next-auth/react";
 
 import { loginAction } from "@/_auth/actions";
+import { useActionState } from 'react';
 
 
 export default Login;
 
 function Login() {
   const userService = useUserService();
+  const alertService = useAlertService();
 
   // get functions to build form with useForm() hook
   const { register, handleSubmit, formState } = useForm();
@@ -67,9 +69,30 @@ function Login() {
   //       }
   //     })
   // }
+  async function loginHandler(formData: FormData) {
+    await loginAction(formData);
+//     if (res.message === "Login successful") {
+//       window.location.href = "/dashboard"
+//   }
+
+//   if (res.error) {
+//             alertService.clear();
+//       alertService.error(res.error?.message);
+//   }
+
+// if (res !== 'Success') {
+//   alertService.clear();
+//   alertService.error(res);
+// }
+
+  }
+
+
+  const [state, formAction, pending] = useActionState(loginAction, null);
 
   return (
-    <form action={loginAction}>
+    <form action={formAction}>
+      {state?.message && <p aria-live="polite">{state.message}</p>}
       <div className="field">
         <label className="label">Username</label>
         <div className="control">

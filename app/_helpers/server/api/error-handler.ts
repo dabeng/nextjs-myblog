@@ -22,7 +22,10 @@ async function errorHandler(err: Error | string) {
 		return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 	}
 
+	if (err.message === 'Username or password is incorrect') {
+		return NextResponse.json({ errorMessage: err.message });
+	}
+
 	// default to 500 server error
-	console.error(err);
 	return NextResponse.json({ message: err.message }, { status: 500 });
 }

@@ -26,13 +26,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`, { username, password });
 
+          if (response.data?.errorMessage) {
+            // throw new Error("Invalid credentials.")
+            return null;
+          }
+
           return {
             ...response.data,
             accessExp: jwtDecode(response.data.accessToken).exp,
             refreshExp: jwtDecode(response.data.refreshToken).exp,
           } as User;
-        } catch (error) {
-          throw new Error('Authentication failed');
+        } catch (err: any) {
+          return null;
         }
       },
     }),
