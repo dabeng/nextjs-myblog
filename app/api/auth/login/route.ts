@@ -10,7 +10,7 @@ import {
   } from "_helpers/server";
 
 /* --- Login Route Handler  ---
- * It receives HTTP requests sent to the login route /api/account/login.
+ * It receives HTTP requests sent to the login route /api/auth/login.
  * It supports HTTP POST requests containing a username and password which are authenticated by
  * the usersRepo.authenticate() function. On success a JWT auth token is set in an HTTP only
  * 'authorization' cookie.

@@ -3,11 +3,6 @@ import { NextResponse } from "next/server";
 import { publicRoutes } from "@/_auth/contants";
 
 export default auth((req) => {
-  // if (!req.auth && req.nextUrl.pathname !== "/account/login") {
-  //   const newUrl = new URL("/account/login", req.nextUrl.origin)
-  //   return Response.redirect(newUrl)
-  // }
-
   // Check if the user is authenticated
   if ((!req.auth && !publicRoutes.some((route) => route === req.nextUrl.pathname))
     || (req.auth && Date.now() >= req.auth.refreshExp * 1000)) {

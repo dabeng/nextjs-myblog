@@ -11,12 +11,6 @@ import { Alert, Nav } from "_components";
 export default Layout;
 
 async function Layout({ children }: { children: React.ReactNode }) {
-  // if not logged in redirect to login page
-  // if (!(await authService.isAuthenticated())) {
-    // const returnUrl = encodeURIComponent((await headers()).get("x-invoke-path") || "/");
-    // redirect(`/account/login?returnUrl=${returnUrl}`);
-  // }
-
   return (
     <>
       <Nav />
