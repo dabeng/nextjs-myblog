@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { object, string } from "zod";
-import NextAuth from "next-auth";
+import NextAuth, {CredentialsSignin} from "next-auth";
 import type { User } from "next-auth";
 import 'next-auth/jwt';
 import type { JWT } from "next-auth/jwt";
@@ -10,6 +10,10 @@ import {
   authService,
 } from "@/_auth/authService";
 import jwt from 'jsonwebtoken';
+
+class CustomError extends CredentialsSignin {
+  code = "custom_error"
+ }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -28,7 +32,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           if (response.data?.errorMessage) {
             // throw new Error("Invalid credentials.")
-            return null;
+            // return { error: response.data?.errorMessage };
+            // throw new CustomError();
+            return {error: 'custom error message', status: 200, ok: true, url: null}
           }
 
           return {
@@ -78,6 +84,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // the timing of the token expiration because the middleware should
       // have caught this case before the callback is called
       return { ...token } as JWT;
+    },
+    async signIn({ user }) {
+      if (user?.error) {
+        throw new Error(user?.error )
+      }
+      return true;
     },
     // FYI, https://next-auth.js.org/configuration/callbacks#session-callback
     async session({ session, token }) {

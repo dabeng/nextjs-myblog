@@ -12,7 +12,7 @@ async function loginAction (prevState: any, formData: FormData) {
   const res = await signIn("credentials", {
       username: formData.get('username'),
       password: formData.get('password'),
-      redirectTo: '/'
+      // redirectTo: '/'
     })
   if (res===null) {
     return {message: 'fail'}

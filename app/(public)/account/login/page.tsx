@@ -10,10 +10,12 @@ import { useUserService, useAlertService } from "_services";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import type { SignInResponse } from "next-auth/react";
-import { signIn } from "next-auth/react";
+// import { signIn } from "next-auth/react";
 
 import { loginAction } from "@/_auth/actions";
 import { useActionState } from 'react';
+
+import { signIn } from "next-auth/react";
 
 
 export default Login;
@@ -69,30 +71,30 @@ function Login() {
   //       }
   //     })
   // }
-  async function loginHandler(formData: FormData) {
-    await loginAction(formData);
-//     if (res.message === "Login successful") {
-//       window.location.href = "/dashboard"
-//   }
 
-//   if (res.error) {
-//             alertService.clear();
-//       alertService.error(res.error?.message);
-//   }
+  async function submitHandler (e)  {
+    e.preventDefault();
 
-// if (res !== 'Success') {
-//   alertService.clear();
-//   alertService.error(res);
-// }
+    const res = await signIn("credentials", {
+      username: e.target.username.value,
+      password: e.target.password.value,
+      redirect: false,
+    });
+    console.log(res);
+    if (res?.error) {
+      alert(res?.error);
+    } else {
+      alert("sign in sucessful");
+      router.push('/');
+    }
+  };
 
-  }
-
-
-  const [state, formAction, pending] = useActionState(loginAction, null);
+  // const [state, formAction, pending] = useActionState(loginAction, null);
 
   return (
-    <form action={formAction}>
-      {state?.message && <p aria-live="polite">{state.message}</p>}
+    // <form action={formAction}>
+    <form onSubmit={submitHandler}>
+      {/* {state?.message && <p aria-live="polite">{state.message}</p>} */}
       <div className="field">
         <label className="label">Username</label>
         <div className="control">
