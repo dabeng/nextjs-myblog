@@ -12,7 +12,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import type { SignInResponse } from "next-auth/react";
 // import { signIn } from "next-auth/react";
 
-import { loginAction } from "@/_auth/actions";
+// import { loginAction } from "@/_auth/actions";
 import { useActionState } from 'react';
 
 import { signIn } from "next-auth/react";
@@ -33,11 +33,11 @@ function Login() {
     password: register("password", { required: "Password is required" })
   };
 
-  async function onSubmit({ username, password }: any) {
-    const callbackUrl = searchParams.get("callbackUrl");
-    await userService.login(username, password);
+  // async function onSubmit({ username, password }: any) {
+  //   const callbackUrl = searchParams.get("callbackUrl");
+  //   await userService.login(username, password);
 
-  }
+  // }
 
   // const credentialsAction = (formData: any) => {
   //   signIn("credentials", formData);
@@ -72,15 +72,13 @@ function Login() {
   //     })
   // }
 
-  async function submitHandler (e)  {
-    e.preventDefault();
-
+  async function loginAction (formData: FormData)  {
     const res = await signIn("credentials", {
-      username: e.target.username.value,
-      password: e.target.password.value,
+      username: formData.get('username'),
+      password: formData.get('password'),
       redirect: false,
     });
-    console.log(res);
+
     if (res?.error) {
       alert(res?.error);
     } else {
@@ -90,10 +88,24 @@ function Login() {
   };
 
   // const [state, formAction, pending] = useActionState(loginAction, null);
+  async function onSubmit({ username, password }: any) {
+    const res = await signIn("credentials", {
+      username: username,
+      password: password,
+      redirect: false,
+    });
+
+    if (res?.error) {
+      alert(res?.error);
+    } else {
+      alert("sign in sucessful");
+      router.push('/');
+    }
+  }
 
   return (
-    // <form action={formAction}>
-    <form onSubmit={submitHandler}>
+    // <form action={loginAction}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       {/* {state?.message && <p aria-live="polite">{state.message}</p>} */}
       <div className="field">
         <label className="label">Username</label>
@@ -121,7 +133,7 @@ function Login() {
         <div className="control">
           <button disabled={formState.isSubmitting} className="button is-link">
             {formState.isSubmitting && (
-              <span className="icon">
+              <span className="icon mr-0">
                 <i className="fa-solid fa-circle-notch fa-spin"></i>
               </span>
             )}
