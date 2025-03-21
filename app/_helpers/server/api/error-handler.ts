@@ -23,7 +23,7 @@ async function errorHandler(err: Error | string) {
 	}
 
 	if (err.message === 'Username or password is incorrect') {
-		return NextResponse.json({ errorMessage: err.message });
+		return NextResponse.json({ message: err.message }, { status: 200 });
 	}
 
 	// default to 500 server error

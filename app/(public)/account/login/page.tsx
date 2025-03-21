@@ -72,20 +72,7 @@ function Login() {
   //     })
   // }
 
-  async function loginAction (formData: FormData)  {
-    const res = await signIn("credentials", {
-      username: formData.get('username'),
-      password: formData.get('password'),
-      redirect: false,
-    });
 
-    if (res?.error) {
-      alert(res?.error);
-    } else {
-      alert("sign in sucessful");
-      router.push('/');
-    }
-  };
 
   // const [state, formAction, pending] = useActionState(loginAction, null);
   async function onSubmit({ username, password }: any) {
@@ -96,9 +83,9 @@ function Login() {
     });
 
     if (res?.error) {
-      alert(res?.error);
+      alertService.clear();
+      alertService.error(res?.code || res.error);
     } else {
-      alert("sign in sucessful");
       router.push('/');
     }
   }

@@ -6,14 +6,9 @@ import type { User } from "next-auth";
 import 'next-auth/jwt';
 import type { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
-import {
-  authService,
-} from "@/_auth/authService";
-import jwt from 'jsonwebtoken';
-
-class CustomError extends CredentialsSignin {
-  code = "custom_error"
- }
+ class InvalidCredentialsError extends CredentialsSignin {
+  code = "Username or password is incorrect"
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -21,7 +16,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorize: async (credentials) => {
         // Any object returned will be saved in `user` property of the JWT callback
         // FYI, https://authjs.dev/reference/core/providers/credentials#authorize
-        try {
           const loginSchema = object({
             username: string(),
             password: string()
@@ -30,11 +24,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`, { username, password });
 
-          if (response.data?.errorMessage) {
-            // throw new Error("Invalid credentials.")
-            // return { error: response.data?.errorMessage };
-            // throw new CustomError();
-            return {error: 'custom error message', status: 200, ok: true, url: null}
+          if (response.data?.message === 'Username or password is incorrect') {
+            return { error: response.data?.message, status: 200, ok: true, url: null }
           }
 
           return {
@@ -42,9 +33,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             accessExp: jwtDecode(response.data.accessToken).exp,
             refreshExp: jwtDecode(response.data.refreshToken).exp,
           } as User;
-        } catch (err: any) {
-          return null;
-        }
       },
     }),
   ],
@@ -85,9 +73,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // have caught this case before the callback is called
       return { ...token } as JWT;
     },
+    // FYI, https://authjs.dev/reference/nextjs#signin
     async signIn({ user }) {
       if (user?.error) {
-        throw new Error(user?.error )
+        throw new InvalidCredentialsError();
       }
       return true;
     },
