@@ -41,8 +41,8 @@ async function login({ username, password }: { username: string, password: strin
 
   return {
     ...user.toJSON(),
-    accessToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '5m' }),
-    refreshToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '50m' })
+    accessToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '10s' }),
+    refreshToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '1m' })
   };
 }
 
@@ -73,10 +73,10 @@ async function refresh(refreshToken:string): Promise<string> {
     //   })
     // }
 
-    return jwt.sign({ sub: id }, process.env.AUTH_SECRET!, { expiresIn: '5m' });
+    return jwt.sign({ sub: id }, process.env.AUTH_SECRET!, { expiresIn: '10s' });
   } catch (error) {
     // Handle token compromise
-    await signOut();
+    // await signOut();
     throw errorHandler(new Error('Failed to refresh token'));
   }
 

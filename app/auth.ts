@@ -64,7 +64,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       // The refresh token is still valid
       if (Date.now() < token.refreshExp * 1000) {
-        return await axios.post('/auth/refresh', token);
+        return await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/refresh`, token);
       }
 
       // The current access token and refresh token have both expired
