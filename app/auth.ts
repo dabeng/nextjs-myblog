@@ -36,12 +36,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  session: {
-    // FYI, https://authjs.dev/concepts/session-strategies
-    strategy: 'jwt',
-    // How long until an idle session expires and is no longer valid.
-    maxAge: 30 * 24 * 60 * 60 // 30 days
-  },
+  // session: {
+  //   // FYI, https://authjs.dev/concepts/session-strategies
+  //   strategy: 'jwt',
+  //   // How long until an idle session expires and is no longer valid.
+  //   maxAge: 30 * 24 * 60 * 60 // 30 days
+  // },
   callbacks: {
     // FYI, https://next-auth.js.org/configuration/callbacks#jwt-callback
     async jwt({ token, user, trigger, session, account }) {
@@ -64,7 +64,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       // The refresh token is still valid
       if (Date.now() < token.refreshExp * 1000) {
-        return await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/refresh`, token);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/refresh`, token);
+        return {
+          ...token,
+          accessToken: response.data,
+          accessExp: jwtDecode(response.data).exp,
+        }
       }
 
       // The current access token and refresh token have both expired

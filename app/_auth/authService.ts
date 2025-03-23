@@ -42,7 +42,7 @@ async function login({ username, password }: { username: string, password: strin
   return {
     ...user.toJSON(),
     accessToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '10s' }),
-    refreshToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '1m' })
+    refreshToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '30s' })
   };
 }
 
@@ -58,7 +58,7 @@ async function login({ username, password }: { username: string, password: strin
  */
 async function refresh(refreshToken:string): Promise<string> {
   try {
-    const { data: session, update } = useSession();
+    // const { data: session, update } = useSession();
 
     // Verify that the token is valid and not expired
       const decoded = jwt.verify(refreshToken, process.env.AUTH_SECRET!);
