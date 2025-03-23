@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { User } from './userModel';
-import { useSession, signOut } from 'next-auth/react';
 import { errorHandler } from '@/_helpers/server';
 
 /* --- Auth Helper ---
@@ -41,8 +40,8 @@ async function login({ username, password }: { username: string, password: strin
 
   return {
     ...user.toJSON(),
-    accessToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '10s' }),
-    refreshToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '30s' })
+    accessToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '1h' }),
+    refreshToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '1d' })
   };
 }
 
@@ -58,22 +57,11 @@ async function login({ username, password }: { username: string, password: strin
  */
 async function refresh(refreshToken:string): Promise<string> {
   try {
-    // const { data: session, update } = useSession();
-
     // Verify that the token is valid and not expired
       const decoded = jwt.verify(refreshToken, process.env.AUTH_SECRET!);
       const id = decoded.sub as string;
 
-
-    // Implement refresh token rotation
-    // if (response.data.newRefreshToken) {
-    //   await update({
-    //     ...session,
-    //     refreshToken: response.data.newRefreshToken
-    //   })
-    // }
-
-    return jwt.sign({ sub: id }, process.env.AUTH_SECRET!, { expiresIn: '10s' });
+    return jwt.sign({ sub: id }, process.env.AUTH_SECRET!, { expiresIn: '1h' });
   } catch (error) {
     // Handle token compromise
     // await signOut();

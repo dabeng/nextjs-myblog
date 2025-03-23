@@ -5,12 +5,11 @@ import { publicRoutes } from "@/_auth/contants";
 export default auth((req) => {
   // Check if the user is authenticated
   if ((!req.auth && !publicRoutes.some((route) => route === req.nextUrl.pathname))
-    || (req.auth && Date.now() >= req.auth.refreshExp * 1000)) {
-    // Redirect to the login page
+    || (req.auth && Date.now() >= req.auth.refreshExp * 1000 && !publicRoutes.some((route) => route === req.nextUrl.pathname))) {
     return NextResponse.redirect(new URL("/account/login", req.nextUrl.origin));
   }
 
-  if (req.auth && publicRoutes.some((route) => route === req.nextUrl.pathname)) {
+  if (req.auth && Date.now() < req.auth.refreshExp * 1000 && publicRoutes.some((route) => route === req.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/", req.nextUrl.origin));
   }
 
