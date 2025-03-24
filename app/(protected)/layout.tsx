@@ -1,8 +1,4 @@
-import React, { useEffect } from 'react';
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-
-import { authService } from "_helpers/server";
+import React from 'react';
 import { Alert, Nav } from "_components";
 /*
 * The secure layout component contains common layout code for all pages in the
