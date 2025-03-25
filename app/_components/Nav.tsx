@@ -4,10 +4,12 @@ import { useState } from "react";
 
 import { NavLink } from "_components";
 import { logoutAction } from "@/_auth/actions";
+import { useSession } from "next-auth/react";
 
 export { Nav };
 
 function Nav() {
+  const {data: session} = useSession();
   const [loggingOut, setLoggingOut] = useState(false);
 
   async function logoutHandler() {
@@ -33,27 +35,36 @@ function Nav() {
           <NavLink href="/" exact className="navbar-item">
             Home
           </NavLink>
-          <NavLink href="/users" className="navbar-item">
-            Users
-          </NavLink>
+          {session?.user?.role === 'admin' &&
+            <NavLink href="/users" className="navbar-item">
+              Users
+            </NavLink>
+          }
         </div>
 
         <div className="navbar-end">
           <div className="navbar-item">
-            <div className="buttons">
-              <button
-                onClick={logoutHandler}
-                className="button"
-                disabled={loggingOut}
-              >
-                {loggingOut ? (
-                  <span className="icon">
-                    <i className="fa-solid fa-circle-notch fa-spin"></i>
-                  </span>
-                ) : (
-                  <span>Log out</span>
-                )}
-              </button>
+            <div className="field is-grouped">
+              <p className="control">
+                <NavLink href="/profile" className="button is-dark is-light">
+                  {session?.user?.username}
+                </NavLink>
+              </p>
+              <p className="control">
+                <button
+                  onClick={logoutHandler}
+                  className="button"
+                  disabled={loggingOut}
+                >
+                  {loggingOut ? (
+                    <span className="icon">
+                      <i className="fa-solid fa-circle-notch fa-spin"></i>
+                    </span>
+                  ) : (
+                    <span>Log out</span>
+                  )}
+                </button>
+              </p>
             </div>
           </div>
         </div>

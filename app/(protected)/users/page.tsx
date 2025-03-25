@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Spinner } from "_components";
 import { useAlertService, useUserService } from "_services";
 import type { IUser } from "_services";
+
 /*
  * The users list page displays a list of all users in the Next.js tutorial app and
  * contains buttons for adding, editing and deleting users.
@@ -14,7 +15,7 @@ import type { IUser } from "_services";
 export default Users;
 
 function Users() {
-  const [ deletedUserId, setDeletedUserId ] = useState('');
+  const [deletedUserId, setDeletedUserId] = useState('');
   const alertService = useAlertService();
   const userService = useUserService();
 
@@ -118,11 +119,11 @@ function Users() {
               style={{ width: "60px" }}
               disabled={deletedUserId === user.id && deleteUserMutation.isPending}
             >
-                <span>Delete</span>
+              <span>Delete</span>
               {deletedUserId === user.id && deleteUserMutation.isPending && (
-              <span className="icon ml-0">
-                <i className="fa-solid fa-circle-notch fa-spin"></i>
-              </span>
+                <span className="icon ml-0">
+                  <i className="fa-solid fa-circle-notch fa-spin"></i>
+                </span>
               )}
             </button>
           </div>

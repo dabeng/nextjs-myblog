@@ -43,7 +43,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user && account) {
         return {
           ...token,
-          user: { id: user.id, username: user.username },
+          user: { id: user.id, username: user.username, role: user.role },
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
           accessExp: user.accessExp,
@@ -96,6 +96,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 declare module "next-auth" {
   interface User {
     username: string;
+    role: string;
     accessToken: string;
     refreshToken: string;
     accessExp: number;

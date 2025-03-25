@@ -4,6 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import "./globals.css";
 
 import { QueryProvider } from './_components/providers';
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "MyBlog based on next.js",
@@ -18,9 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <QueryProvider>
-          {children}
-        </QueryProvider>
+        <SessionProvider>
+          <QueryProvider>
+            {children}
+          </QueryProvider>
+        </SessionProvider>
       </body>
     </html>
   );
