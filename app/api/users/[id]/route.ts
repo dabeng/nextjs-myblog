@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import {
   userService,
   errorHandler,
-  jwtMiddleware,
   validateMiddleware
 } from "_helpers/server";
 /* --- Users [id] Route Handler ---

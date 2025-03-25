@@ -90,7 +90,7 @@ function Register() {
             className="button is-primary"
           >
             {formState.isSubmitting && (
-              <span className="icon">
+              <span className="icon mr-0">
                 <i className="fa-solid fa-circle-notch fa-spin"></i>
               </span>
             )}

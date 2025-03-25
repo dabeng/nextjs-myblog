@@ -2,7 +2,6 @@ import { z } from "zod";
 import type { NextRequest } from 'next/server';
 import { NextResponse } from "next/server";
 import { userService,	errorHandler,
-	jwtMiddleware,
 	validateMiddleware } from "_helpers/server";
 /* --- Register Route Handler ---
 * It receives HTTP requests sent to the register route /api/account/register. It supports HTTP
@@ -12,7 +11,6 @@ import { userService,	errorHandler,
 export async function POST(req: NextRequest) {
 	try {
 		// global middleware
-		await jwtMiddleware(req);
 		const schema = z.object({
 			firstName: z.string(),
 			lastName: z.string(),

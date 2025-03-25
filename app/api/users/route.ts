@@ -2,7 +2,6 @@ import { z } from "zod";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { userService,  errorHandler,
-  jwtMiddleware,
   validateMiddleware } from "_helpers/server";
 /*
  * --- Users Route Handler---
