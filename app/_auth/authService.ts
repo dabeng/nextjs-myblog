@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { User } from './userModel';
+import { User } from '@/_helpers/server';
 import { errorHandler } from '@/_helpers/server';
 
 /* --- Auth Helper ---
