@@ -40,8 +40,8 @@ async function login({ username, password }: { username: string, password: strin
 
   return {
     ...user.toJSON(),
-    accessToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '1h' }),
-    refreshToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '1d' })
+    accessToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '1d' }),
+    refreshToken: jwt.sign({ sub: user.id }, process.env.AUTH_SECRET!, { expiresIn: '7d' })
   };
 }
 
@@ -61,7 +61,7 @@ async function refresh(refreshToken:string): Promise<string> {
       const decoded = jwt.verify(refreshToken, process.env.AUTH_SECRET!);
       const id = decoded.sub as string;
 
-    return jwt.sign({ sub: id }, process.env.AUTH_SECRET!, { expiresIn: '1h' });
+    return jwt.sign({ sub: id }, process.env.AUTH_SECRET!, { expiresIn: '1d' });
   } catch (error) {
     // Handle token compromise
     // await signOut();
