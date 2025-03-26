@@ -7,6 +7,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Spinner } from "_components";
 import { useAlertService, useUserService } from "_services";
 import type { IUser } from "_services";
+import { useSession } from "next-auth/react";
+import { forbidden } from 'next/navigation';
 
 /*
  * The users list page displays a list of all users in the Next.js tutorial app and
@@ -15,6 +17,7 @@ import type { IUser } from "_services";
 export default Users;
 
 function Users() {
+  const {data: session} = useSession();
   const [deletedUserId, setDeletedUserId] = useState('');
   const alertService = useAlertService();
   const userService = useUserService();
@@ -45,6 +48,11 @@ function Users() {
     } catch (error: any) {
       alertService.error(error);
     }
+  }
+
+  // 检查用户是否具有 'admin' 角色
+  if (session && session.user.role !== 'admin') {
+    forbidden();
   }
 
   return (
