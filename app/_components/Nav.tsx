@@ -61,7 +61,9 @@ function Nav() {
                       <i className="fa-solid fa-circle-notch fa-spin"></i>
                     </span>
                   ) : (
-                    <span>Log out</span>
+                    <span className="icon">
+                      <i className="fa-solid fa-right-from-bracket"></i>
+                    </span>
                   )}
                 </button>
               </p>
