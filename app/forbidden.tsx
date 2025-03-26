@@ -7,7 +7,9 @@ export default function Forbidden() {
         <div className="">
           <p className="title is-1">Forbidden</p>
           <p className="subtitle is-3">You are not authorized to access this resource.</p>
-          <Link className="subtitle is-3 has-text-white" href="/">Return Home</Link>
+          <p className="subtitle is-3 has-text-white">
+            <Link  href="/">Return Home</Link>
+            </p>
         </div>
       </div>
     </section>
