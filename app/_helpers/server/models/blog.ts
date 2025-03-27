@@ -1,14 +1,12 @@
 import { model, models, Schema } from 'mongoose';
 
-export { User };
+export { Blog };
 
 const schema = new Schema({
-  username: { type: String, unique: true, required: true },
-  hash: { type: String, required: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  role: { type: String, default: 'user' },
-  blogs: [{ type: Schema.Types.ObjectId, ref: 'Blog' }],
+  title: { type: String, required: true },
+  subtitle: { type: String },
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
+  content: { type: String, required: true },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
 }, {
   // add createdAt and updatedAt timestamps
@@ -24,5 +22,5 @@ schema.set('toJSON', {
   }
 });
 
-const User = models.User || model('User', schema);
+const Blog = models.User || model('Blog', schema);
 
