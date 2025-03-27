@@ -13,13 +13,8 @@ import { auth } from "@/auth";
 export default Home;
 
 async function Home() {
-  // const userService = useUserService();
-  // const user = userService.currentUser;
   const session = await auth();
 
-  // useEffect(() => {
-    // userService.getCurrent();
-  // }, []);
 
   if (session?.user) {
     return (

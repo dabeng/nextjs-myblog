@@ -1,6 +1,6 @@
 import { Comment } from '../models';
 
-export const blogService = {
+export const commentService = {
   getAll,
   getById,
   create,

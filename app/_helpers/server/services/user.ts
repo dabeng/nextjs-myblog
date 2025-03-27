@@ -1,12 +1,10 @@
 
 import bcrypt from 'bcryptjs';
-import { headers } from 'next/headers';
 import { User } from '../models';
 
 export const userService = {
   getAll,
   getById,
-  getCurrent,
   create,
   update,
   delete: _delete
@@ -21,15 +19,6 @@ async function getById(id: string) {
     return await User.findById(id);
   } catch {
     throw 'User Not Found';
-  }
-}
-
-async function getCurrent() {
-  try {
-    const currentUserId = (await headers()).get('userId');
-    return await User.findById(currentUserId);
-  } catch {
-    throw 'Current User Not Found';
   }
 }
 

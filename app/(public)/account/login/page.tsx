@@ -9,19 +9,12 @@ import { useUserService, useAlertService } from "_services";
 
 
 import { useSearchParams, useRouter } from "next/navigation";
-import type { SignInResponse } from "next-auth/react";
-// import { signIn } from "next-auth/react";
-
-// import { loginAction } from "@/_auth/actions";
-import { useActionState } from 'react';
-
 import { signIn } from "next-auth/react";
 
 
 export default Login;
 
 function Login() {
-  const userService = useUserService();
   const alertService = useAlertService();
 
   // get functions to build form with useForm() hook
@@ -33,48 +26,8 @@ function Login() {
     password: register("password", { required: "Password is required" })
   };
 
-  // async function onSubmit({ username, password }: any) {
-  //   const callbackUrl = searchParams.get("callbackUrl");
-  //   await userService.login(username, password);
-
-  // }
-
-  // const credentialsAction = (formData: any) => {
-  //   signIn("credentials", formData);
-  // }
-
-  const searchParams = useSearchParams();
   const router = useRouter();
-  // async function credentialsAction(formData: any) { // whatever your type
-  //   const callbackUrl = searchParams.get("callbackUrl")
-  //   signIn("credentials", formData)
-  //     .then((res: SignInResponse | undefined) => {
-  //       if (!res) {
-  //         alert("No response!")
-  //         return
-  //       }
 
-  //       if (!res.ok)
-  //         alert("Something went wrong!")
-  //       else if (res.error) {
-  //         console.log(res.error)
-
-  //         if (res.error == "CallbackRouteError")
-  //           alert("Could not login! Please check your credentials.")
-  //         else
-  //           alert(`Internal Server Error: ${res.error}`)
-  //       } else {
-  //         if (callbackUrl)
-  //           router.push(callbackUrl)
-  //         else
-  //           router.push("/")
-  //       }
-  //     })
-  // }
-
-
-
-  // const [state, formAction, pending] = useActionState(loginAction, null);
   async function onSubmit({ username, password }: any) {
     const res = await signIn("credentials", {
       username: username,
@@ -91,9 +44,7 @@ function Login() {
   }
 
   return (
-    // <form action={loginAction}>
     <form onSubmit={handleSubmit(onSubmit)}>
-      {/* {state?.message && <p aria-live="polite">{state.message}</p>} */}
       <div className="field">
         <label className="label">Username</label>
         <div className="control">
