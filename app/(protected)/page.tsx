@@ -19,11 +19,11 @@ async function Home() {
   if (session?.user) {
     return (
       <>
+        <p>
+          <Link href="/blogs/add">Write New One</Link>
+        </p>
         <h1>Hi {session.user.username}!</h1>
         <p>You&apos;re logged in with Next.js & JWT!!</p>
-        <p>
-          <Link href="/users">Manage Users</Link>
-        </p>
       </>
     );
   } else {
