@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ForwardRefEditor } from "../MDXEditor";
+import { MDXEditor, headingsPlugin, listsPlugin, quotePlugin, thematicBreakPlugin, UndoRedo, BoldItalicUnderlineToggles, toolbarPlugin } from '@mdxeditor/editor';
+import '@mdxeditor/editor/style.css';
 
 import { useAlertService, useBlogService } from "_services";
 import type { IBlog } from "_services";
@@ -109,6 +112,15 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
         </div>
         <p className="help is-danger">{errors.content?.message?.toString()}</p>
       </div>
+      <ForwardRefEditor contentEditableClassName="prose max-w-none" markdown="# Hello world" plugins={[toolbarPlugin({
+          toolbarClassName: 'my-classname',
+          toolbarContents: () => (
+            <>
+              <UndoRedo />
+              <BoldItalicUnderlineToggles />
+            </>
+          )
+        }),headingsPlugin(), listsPlugin(), quotePlugin(), thematicBreakPlugin()]} />
 
 
       <div className="field is-grouped">
