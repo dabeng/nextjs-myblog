@@ -22,5 +22,5 @@ schema.set('toJSON', {
   }
 });
 
-const Blog = models.User || model('Blog', schema);
+const Blog = models.Blog || model('Blog', schema);
 

@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useRef } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -9,7 +11,8 @@ import {
   MDXEditor, headingsPlugin, listsPlugin, quotePlugin, thematicBreakPlugin, UndoRedo,
   BoldItalicUnderlineToggles, toolbarPlugin, InsertTable, InsertImage, imagePlugin, tablePlugin,
   ListsToggle, Separator, InsertThematicBreak, CodeBlockEditorDescriptor, useCodeBlockEditorContext,
-  CreateLink, linkPlugin, linkDialogPlugin, BlockTypeSelect
+  CreateLink, linkPlugin, linkDialogPlugin, BlockTypeSelect,
+  insertCodeBlock$
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 
@@ -23,12 +26,13 @@ import type { IBlog } from "_services";
 export { AddEdit };
 
 function AddEdit({ title, blog }: { title: string; blog?: any }) {
+  const {data: session} = useSession();
   const router = useRouter();
   const alertService = useAlertService();
   const blogService = useBlogService();
 
   // get functions to build form with useForm() hook
-  const { register, handleSubmit, reset, formState } = useForm({
+  const { register, handleSubmit, reset, formState, setValue } = useForm({
     defaultValues: blog
   });
   const { errors } = formState;
@@ -36,7 +40,7 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
   const fields = {
     title: register("title", { required: "Title is required" }),
     subtitle: register("subtitle", { required: "Subtitle is required" }),
-    content: register("content", { required: "Subtitle is required" })
+    content: register("content", { required: "Content is required" })
   };
 
   const queryClient = useQueryClient();
@@ -62,6 +66,8 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
     },
   });
 
+  const contentRef = useRef(null);
+
   async function onSubmit(data: any) {
     try {
       alertService.clear();
@@ -71,6 +77,7 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
         await updateBlogMutation.mutateAsync(data);
         message = "Blog updated";
       } else {
+        data.author = session?.user.id;
         await createBlogMutation.mutateAsync(data);
         message = "Blog added";
       }
@@ -93,6 +100,13 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
     })
     const json = (await response.json()) as { url: string }
     return json.url
+  }
+
+  function updateContentField(markdown: string) {
+    setValue("content", markdown, {
+      shouldValidate: true,
+      shouldDirty: true,
+    })
   }
 
   return (
@@ -125,35 +139,36 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
         <div className="control">
           <input
             {...fields.content}
-            type="text"
+            type="hidden"
             className={`input ${errors.content ? "is-danger" : ""}`}
+          />
+          <ForwardRefEditor ref={contentRef} onChange={updateContentField} contentEditableClassName="prose" markdown="" plugins={[
+            toolbarPlugin({
+              toolbarClassName: 'my-classname',
+              toolbarContents: () => (
+                <>
+                  <UndoRedo /><Separator />
+                  <BlockTypeSelect />
+                  <BoldItalicUnderlineToggles /><Separator />
+                  <ListsToggle /><Separator />
+                  <CreateLink />
+                  <InsertImage />
+                  <InsertTable />
+                  <InsertThematicBreak />
+                </>
+              )
+            }),
+            imagePlugin({
+              imageUploadHandler
+            }),
+            linkPlugin(), linkDialogPlugin(),
+            tablePlugin(),
+            headingsPlugin(), listsPlugin(), quotePlugin(), thematicBreakPlugin()]}
           />
         </div>
         <p className="help is-danger">{errors.content?.message?.toString()}</p>
       </div>
-      <ForwardRefEditor contentEditableClassName="prose" markdown="# Hello **world**!" plugins={[
-        toolbarPlugin({
-          toolbarClassName: 'my-classname',
-          toolbarContents: () => (
-            <>
-              <UndoRedo /><Separator />
-              <BlockTypeSelect />
-              <BoldItalicUnderlineToggles /><Separator />
-              <ListsToggle /><Separator />
-              <CreateLink />
-              <InsertImage />
-              <InsertTable />
-              <InsertThematicBreak />
-            </>
-          )
-        }),
-        imagePlugin({
-          imageUploadHandler
-        }),
-        linkPlugin(), linkDialogPlugin(),
-        tablePlugin(),
-        headingsPlugin(), listsPlugin(), quotePlugin(), thematicBreakPlugin()]}
-      />
+
 
 
       <div className="field is-grouped">
