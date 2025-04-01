@@ -5,8 +5,14 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ForwardRefEditor } from "../MDXEditor";
-import { MDXEditor, headingsPlugin, listsPlugin, quotePlugin, thematicBreakPlugin, UndoRedo, BoldItalicUnderlineToggles, toolbarPlugin } from '@mdxeditor/editor';
+import {
+  MDXEditor, headingsPlugin, listsPlugin, quotePlugin, thematicBreakPlugin, UndoRedo,
+  BoldItalicUnderlineToggles, toolbarPlugin, InsertTable, InsertImage, imagePlugin, tablePlugin,
+  ListsToggle, Separator, InsertThematicBreak, CodeBlockEditorDescriptor, useCodeBlockEditorContext,
+  CreateLink, linkPlugin, linkDialogPlugin, BlockTypeSelect
+} from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
+
 
 import { useAlertService, useBlogService } from "_services";
 import type { IBlog } from "_services";
@@ -76,6 +82,19 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
     }
   }
 
+  async function imageUploadHandler(image: File) {
+    const formData = new FormData()
+    formData.append('image', image)
+    // send the file to your server and return
+    // the URL of the uploaded image in the response
+    const response = await fetch('/uploads/new', {
+      method: 'POST',
+      body: formData
+    })
+    const json = (await response.json()) as { url: string }
+    return json.url
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1 className="title mt-5">{title}</h1>
@@ -112,15 +131,29 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
         </div>
         <p className="help is-danger">{errors.content?.message?.toString()}</p>
       </div>
-      <ForwardRefEditor contentEditableClassName="prose max-w-none" markdown="# Hello world" plugins={[toolbarPlugin({
+      <ForwardRefEditor contentEditableClassName="prose" markdown="# Hello **world**!" plugins={[
+        toolbarPlugin({
           toolbarClassName: 'my-classname',
           toolbarContents: () => (
             <>
-              <UndoRedo />
-              <BoldItalicUnderlineToggles />
+              <UndoRedo /><Separator />
+              <BlockTypeSelect />
+              <BoldItalicUnderlineToggles /><Separator />
+              <ListsToggle /><Separator />
+              <CreateLink />
+              <InsertImage />
+              <InsertTable />
+              <InsertThematicBreak />
             </>
           )
-        }),headingsPlugin(), listsPlugin(), quotePlugin(), thematicBreakPlugin()]} />
+        }),
+        imagePlugin({
+          imageUploadHandler
+        }),
+        linkPlugin(), linkDialogPlugin(),
+        tablePlugin(),
+        headingsPlugin(), listsPlugin(), quotePlugin(), thematicBreakPlugin()]}
+      />
 
 
       <div className="field is-grouped">
