@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { useBlogService } from "_services";
+import { useBlogService, IBlog } from "_services";
 import { Spinner } from "_components";
 import { useSession } from "next-auth/react";
 /*
@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 export default Home;
 
 function Home() {
-  const {data: session} = useSession();
+  const { data: session } = useSession();
   const blogService = useBlogService();
 
   const { data: blogs, error, isPending, isSuccess } = useQuery({
@@ -32,29 +32,43 @@ function Home() {
       });
     },
   });
-
-
-  if (session?.user) {
-    return (
-      <>
-        <p>
-          <Link href="/blogs/add">Write New One</Link>
-        </p>
-        <h1>Hi {session.user.username}!</h1>
-        <p>You&apos;re logged in with Next.js & JWT!!</p>
-        {blogs?.map(blog => (
-          <div key={blog.id} className="card">
-            <div className="card-content">
-              <div className="content">
-                {blog.title}
-              </div>
-            </div>
-          </div>
-        ))
-        }
-      </>
-    );
-  } else {
-    return <div style={{ "height": "600px", "fontSize": "64px" }}><Spinner /></div>
+  return (
+    <>
+    <p>
+      <Link className="button is-dark mt-5 mb-5" href="/blogs/add">Write New One</Link>
+    </p>
+  {isPending && (
+      <div style={{ "height": "80px", "fontSize": "64px" }}>
+        <Spinner />
+      </div>
+    )
   }
+  {
+    error && (
+        <div className="text-center">
+          No Users To Display
+        </div>
+    )
+  }
+  {
+    blogs && (blogs as Array<IBlog>).length === 0 && (
+        <div className="text-center">
+          No Users To Display
+        </div>
+    )
+  }
+  {
+    blogs?.map(blog => (
+      <div key={blog.id} className="card">
+        <div className="card-content">
+          <div className="content">
+            {blog.title}
+          </div>
+        </div>
+      </div>
+    ))
+  }
+  </>
+);
+
 }

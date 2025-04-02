@@ -5,8 +5,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Spinner } from "_components";
-import { useAlertService, useUserService } from "_services";
-import type { IUser } from "_services";
+import { useAlertService, useUserService, type IUser } from "_services";
 import { useSession } from "next-auth/react";
 import { forbidden } from 'next/navigation';
 
