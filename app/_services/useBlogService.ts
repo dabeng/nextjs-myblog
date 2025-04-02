@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { useAlertService } from "_services";
+import { useAlertService, IUser } from "_services";
 import type  { IComment } from "./useCommentService";
 
 export { useBlogService };
@@ -13,11 +13,13 @@ export type { IBlog };
 
 interface IBlog {
   id: string;
-  author: string;
+  author: IUser;
   title: string;
   subtitle: string;
   content: string;
   comments: IComment[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface IBlogService {

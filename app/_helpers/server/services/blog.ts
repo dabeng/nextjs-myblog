@@ -1,4 +1,4 @@
-import { Blog } from '../models';
+import { Blog, User } from '../models';
 
 export const blogService = {
   getAll,
@@ -9,7 +9,7 @@ export const blogService = {
 };
 
 async function getAll() {
-  return await Blog.find();
+  return  await Blog.find().populate('author');
 }
 
 async function getById(id: string) {
@@ -22,6 +22,8 @@ async function getById(id: string) {
 
 async function create(params: any) {
   const blog = new Blog(params);
+  // const author = await User.findById(params.author);
+  // blog.author = author;
   await blog.save();
 }
 

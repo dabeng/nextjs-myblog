@@ -34,41 +34,46 @@ function Home() {
   });
   return (
     <>
-    <p>
-      <Link className="button is-dark mt-5 mb-5" href="/blogs/add">Write New One</Link>
-    </p>
-  {isPending && (
-      <div style={{ "height": "80px", "fontSize": "64px" }}>
-        <Spinner />
-      </div>
-    )
-  }
-  {
-    error && (
-        <div className="text-center">
-          No Users To Display
+      <p>
+        <Link className="button is-dark mt-5 mb-5" href="/blogs/add">Write New One</Link>
+      </p>
+      {isPending && (
+        <div style={{ "height": "80px", "fontSize": "64px" }}>
+          <Spinner />
         </div>
-    )
-  }
-  {
-    blogs && (blogs as Array<IBlog>).length === 0 && (
-        <div className="text-center">
-          No Users To Display
-        </div>
-    )
-  }
-  {
-    blogs?.map(blog => (
-      <div key={blog.id} className="card">
-        <div className="card-content">
-          <div className="content">
-            {blog.title}
+      )
+      }
+      {
+        error && (
+          <div className="text-center">
+            No Users To Display
           </div>
-        </div>
-      </div>
-    ))
-  }
-  </>
-);
+        )
+      }
+      {
+        blogs && (blogs as Array<IBlog>).length === 0 && (
+          <div className="text-center">
+            No Users To Display
+          </div>
+        )
+      }
+      {
+        blogs?.map(blog => (
+          <div key={blog.id} className="card">
+            <div className="card-content">
+              <div className="content">
+                <p>
+                  <span className="mr-5">{blog.author.username}</span>
+                  <span className="mr-5">PUBLISHED: <time>{(new Date(blog.createdAt)).toLocaleDateString('zh-Hans-CN')}</time></span>
+                  <span></span>
+                </p>
+                {blog.title}
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </>
+  );
 
 }
