@@ -23,6 +23,7 @@ interface IBlog {
 }
 
 interface IBlogService {
+  getAllByAuthor: (authorId: string) => Promise<[IBlog]>;
   getAll: () => Promise<[IBlog]>;
   getById: (id: string) => Promise<IBlog | null>;
   create: (user: IBlog) => Promise<void>;
@@ -34,6 +35,12 @@ function useBlogService(): IBlogService {
   const alertService = useAlertService();
 
   return {
+    getAllByAuthor: async (authorId: string) => {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs`, {
+        params: {authorId}
+      });
+      return response.data;
+    },
     getAll: async () => {
       const response = await axios.get('api/blogs');
       return response.data;

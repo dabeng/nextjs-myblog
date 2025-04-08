@@ -46,7 +46,7 @@ function Nav() {
           <div className="navbar-item">
             <div className="field is-grouped">
               <p className="control">
-                <NavLink href="/profile" className="button is-dark is-light">
+                <NavLink href={`/profile/${session?.user?.id}`} className="button is-dark is-light">
                   {session?.user?.username}
                 </NavLink>
               </p>

@@ -12,7 +12,15 @@ export { GET, POST };
 
 async function GET(req: NextRequest) {
   try {
-    const blogs = await blogService.getAll();
+    let blogs;
+
+    if (req.nextUrl.searchParams.size) {
+      if (req.nextUrl.searchParams.has('authorId')) {
+        blogs = await blogService.getAllByAuthor(req.nextUrl.searchParams.get('authorId') as string);
+      }
+    } else {
+      blogs = await blogService.getAll();
+    }
     return NextResponse.json(blogs);
   } catch (err: any) {
     // global error handler

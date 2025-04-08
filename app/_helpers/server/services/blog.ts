@@ -1,12 +1,17 @@
 import { Blog, User } from '../models';
 
 export const blogService = {
+  getAllByAuthor,
   getAll,
   getById,
   create,
   update,
   delete: _delete
 };
+
+async function getAllByAuthor(authorId:string) {
+  return  await Blog.find({author: authorId}).populate('author');
+}
 
 async function getAll() {
   return  await Blog.find().populate('author');
