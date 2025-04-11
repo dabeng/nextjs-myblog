@@ -82,7 +82,7 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
         message = "Blog added";
       }
       // redirect to user list with success message
-      router.push("/");
+      router.push(`/profile/${session?.user.id}`);
       alertService.success(message, true);
     } catch (error: any) {
       alertService.error(error);
