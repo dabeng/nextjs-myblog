@@ -33,10 +33,8 @@ async function PUT(
 ) {
   try {
     const schema = z.object({
-      firstName: z.string(),
-      lastName: z.string(),
-      username: z.string(),
-      password: z.union([z.string().min(6), z.literal("")])
+      title: z.string(),
+      content: z.string(),
     });
     await validateMiddleware(req, schema);
 
@@ -55,13 +53,7 @@ async function DELETE(
 ) {
   try {
     await blogService.delete((await params).id);
-    // auto logout if deleted self
-    if ((await params).id === req.headers.get("userId")) {
-      (await cookies()).delete('authorization');
-      return NextResponse.json({ deletedSelf: true });
-    } else {
-      return NextResponse.json({});
-    }
+    return NextResponse.json({});
   } catch (err: any) {
     // global error handler
     return errorHandler(err);
