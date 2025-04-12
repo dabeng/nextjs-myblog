@@ -15,7 +15,6 @@ interface IBlog {
   id: string;
   author: IUser;
   title: string;
-  subtitle: string;
   content: string;
   comments: IComment[];
   createdAt: Date;

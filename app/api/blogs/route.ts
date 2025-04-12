@@ -32,7 +32,6 @@ async function POST(req: NextRequest) {
   try {
     const schema = z.object({
       title: z.string(),
-      subtitle: z.string(),
       content: z.string(),
       author: z.string() // user.id
     });

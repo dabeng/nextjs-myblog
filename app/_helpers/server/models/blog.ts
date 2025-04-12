@@ -4,7 +4,6 @@ export { Blog };
 
 const schema = new Schema({
   title: { type: String, required: true },
-  subtitle: { type: String },
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   content: { type: String, required: true },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]

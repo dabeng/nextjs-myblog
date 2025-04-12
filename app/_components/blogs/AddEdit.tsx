@@ -39,7 +39,6 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
 
   const fields = {
     title: register("title", { required: "Title is required" }),
-    subtitle: register("subtitle", { required: "Subtitle is required" }),
     content: register("content", { required: "Content is required" })
   };
 
@@ -122,17 +121,6 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
           />
         </div>
         <p className="help is-danger">{errors.title?.message?.toString()}</p>
-      </div>
-      <div className="field">
-        <label className="label">Subtitle</label>
-        <div className="control">
-          <input
-            {...fields.subtitle}
-            type="text"
-            className={`input ${errors.subtitle ? "is-danger" : ""}`}
-          />
-        </div>
-        <p className="help is-danger">{errors.subtitle?.message?.toString()}</p>
       </div>
       <div className="field">
         <label className="label">Content</label>
