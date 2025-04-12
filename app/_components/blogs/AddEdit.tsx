@@ -77,6 +77,7 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
         message = "Blog updated";
       } else {
         data.author = session?.user.id;
+        data.content = contentRef.current?.getMarkdown();
         await createBlogMutation.mutateAsync(data);
         message = "Blog added";
       }
@@ -130,7 +131,7 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
             type="hidden"
             className={`input ${errors.content ? "is-danger" : ""}`}
           />
-          <ForwardRefEditor ref={contentRef} onChange={updateContentField} contentEditableClassName="prose" markdown="" plugins={[
+          <ForwardRefEditor ref={contentRef} onChange={updateContentField} contentEditableClassName="prose" markdown={blog.content} plugins={[
             toolbarPlugin({
               toolbarClassName: 'my-classname',
               toolbarContents: () => (
