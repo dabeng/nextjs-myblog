@@ -15,6 +15,7 @@ import {
   insertCodeBlock$
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
+import styles from './styles.module.css';
 
 
 import { useAlertService, useBlogService } from "_services";
@@ -131,7 +132,7 @@ function AddEdit({ title, blog }: { title: string; blog?: any }) {
             type="hidden"
             className={`input ${errors.content ? "is-danger" : ""}`}
           />
-          <ForwardRefEditor ref={contentRef} onChange={updateContentField} contentEditableClassName="prose" markdown={blog.content} plugins={[
+          <ForwardRefEditor ref={contentRef} onChange={updateContentField} contentEditableClassName={`prose ${styles.contentEditor}`} markdown={blog.content} plugins={[
             toolbarPlugin({
               toolbarClassName: 'my-classname',
               toolbarContents: () => (
