@@ -1,4 +1,4 @@
-import { Blog, User } from '../models';
+import { Blog } from '../models';
 
 export const blogService = {
   getAllByAuthor,
