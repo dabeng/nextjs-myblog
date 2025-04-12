@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useBlogService, IBlog, useAlertService } from "_services";
 import { Spinner } from "_components";
+import { Pagination } from "_components";
 
 export default BlogSection;
 
@@ -42,6 +43,11 @@ function BlogSection({ authorId }: { authorId: string }) {
       alertService.error(error);
     }
   }
+
+  const [activePage, setActivePage] = useState(1);
+  function jumpToPage(n:number) {
+    setActivePage(n);
+  };
 
   return (
     <>
@@ -126,6 +132,7 @@ function BlogSection({ authorId }: { authorId: string }) {
           </div>
         ))
       }
+      <Pagination total={22} pageSize={4} visibleSize={5} onChange={jumpToPage} />
     </>
   );
 
