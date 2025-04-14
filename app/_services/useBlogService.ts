@@ -4,7 +4,7 @@ import { useAlertService, IUser } from "_services";
 import type  { IComment } from "./useCommentService";
 
 export { useBlogService };
-export type { IBlog };
+export type { IBlog, IBlogOnePageParams };
 
 /* --- Blog Service React Hook ---
  * It encapsulates client-side logic and handles HTTP communication between the React front-end
@@ -21,7 +21,23 @@ interface IBlog {
   updatedAt: Date;
 }
 
+interface IBlogOnePageResponse {
+  data: [IBlog];
+  metadata: {
+    total: number
+  }
+}
+
+interface IBlogOnePageParams {
+  author?: string;
+  page: number;
+  page_size?: number;
+  sortFieldName?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
 interface IBlogService {
+  getOnePage: (params: IBlogOnePageParams) => Promise<IBlogOnePageResponse>;
   getAllByAuthor: (authorId: string) => Promise<[IBlog]>;
   getAll: () => Promise<[IBlog]>;
   getById: (id: string) => Promise<IBlog | null>;
@@ -34,6 +50,12 @@ function useBlogService(): IBlogService {
   const alertService = useAlertService();
 
   return {
+    getOnePage: async (params: IBlogOnePageParams) => {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs`, {
+        params: params
+      });
+      return response.data;
+    },
     getAllByAuthor: async (authorId: string) => {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogs`, {
         params: {authorId}

@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { blogService,  errorHandler,
   validateMiddleware } from "_helpers/server";
 import { AuthError } from "next-auth";
+import { IBlogOnePageParams } from "@/_services";
 /*
  * --- Users Route Handler---
  * The users handler receives HTTP requests sent to the base users route /api/users.
@@ -15,9 +16,11 @@ async function GET(req: NextRequest) {
     let blogs;
 
     if (req.nextUrl.searchParams.size) {
-      if (req.nextUrl.searchParams.has('authorId')) {
-        blogs = await blogService.getAllByAuthor(req.nextUrl.searchParams.get('authorId') as string);
+      const params = {};
+      for (const [key, value] of req.nextUrl.searchParams) {
+        params[key] = value;
       }
+      blogs = await blogService.getBySearchParams(params as IBlogOnePageParams);
     } else {
       blogs = await blogService.getAll();
     }

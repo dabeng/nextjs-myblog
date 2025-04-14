@@ -18,7 +18,7 @@ async function Profile({
           <p className="title">{session?.user?.username}</p>
         </div>
       </section>
-      <BlogSection authorId={authorId} />
+      <BlogSection author={authorId} />
     </>
   );
 

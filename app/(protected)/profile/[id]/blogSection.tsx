@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 
 import { useBlogService, IBlog, useAlertService } from "_services";
 import { Spinner } from "_components";
@@ -11,28 +11,34 @@ import { Pagination } from "_components";
 
 export default BlogSection;
 
-function BlogSection({ authorId }: { authorId: string }) {
-  const [deletedBlogId, setDeletedBlogId] = useState('');
+function BlogSection({ author }: { author: string }) {
   const alertService = useAlertService();
-
-
   const blogService = useBlogService();
-  const { data: blogs, error, isPending, isSuccess } = useQuery({
-    queryKey: ['blogs', 'list', authorId],
-    queryFn: () => blogService.getAllByAuthor(authorId)
+
+  const [page, setPage] = useState(1);
+  const { data: blogs, isPending, isFetching, isError, error, isPlaceholderData } = useQuery({
+    queryKey: ['blogs', 'list', author, page],
+    queryFn: () => blogService.getOnePage({ author, page }),
+    placeholderData: keepPreviousData,
   });
 
+  function jumpToPage(n: number) {
+    setPage(n);
+  };
+
   const queryClient = useQueryClient();
+  const [deletedBlogId, setDeletedBlogId] = useState('');
   const deleteBlogMutation = useMutation({
     mutationFn: (id: string) => {
       return blogService.delete(id);
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: ['blogs', 'list', authorId]
+        queryKey: ['blogs', 'list', author]
       });
     },
   });
+
   async function deleteBlog(id: string) {
     try {
       setDeletedBlogId(id);
@@ -43,11 +49,6 @@ function BlogSection({ authorId }: { authorId: string }) {
       alertService.error(error);
     }
   }
-
-  const [activePage, setActivePage] = useState(1);
-  function jumpToPage(n:number) {
-    setActivePage(n);
-  };
 
   return (
     <>
@@ -61,21 +62,21 @@ function BlogSection({ authorId }: { authorId: string }) {
       )
       }
       {
-        error && (
+        isError && (
+          <div className="text-center">
+            Error: {error.message}
+          </div>
+        )
+      }
+      {
+        blogs?.data && (blogs.data as Array<IBlog>).length === 0 && (
           <div className="text-center">
             No Blogs To Display
           </div>
         )
       }
       {
-        blogs && (blogs as Array<IBlog>).length === 0 && (
-          <div className="text-center">
-            No Blogs To Display
-          </div>
-        )
-      }
-      {
-        blogs?.map(blog => (
+        blogs?.data.map(blog => (
           <div key={blog.id} className="card">
             <div className="card-content" style={{ padding: '1rem' }}>
               <div className="content">
@@ -132,7 +133,10 @@ function BlogSection({ authorId }: { authorId: string }) {
           </div>
         ))
       }
-      <Pagination total={22} pageSize={4} visibleSize={5} onChange={jumpToPage} />
+      {
+        blogs?.data &&
+        <Pagination total={blogs?.metadata.total} pageSize={4} visibleSize={5} onChange={jumpToPage} />
+      }
     </>
   );
 

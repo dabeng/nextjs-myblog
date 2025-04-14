@@ -1,7 +1,8 @@
 import { Blog } from '../models';
+import { IBlogOnePageParams } from '@/_services';
 
 export const blogService = {
-  getAllByAuthor,
+  getBySearchParams,
   getAll,
   getById,
   create,
@@ -9,12 +10,28 @@ export const blogService = {
   delete: _delete
 };
 
-async function getAllByAuthor(authorId:string) {
-  return  await Blog.find({author: authorId}).populate('author');
+async function getBySearchParams({ page_size = 5, sortFieldName='updatedAt', sortOrder = 'desc', ...params}: IBlogOnePageParams) {
+  params.page = parseInt(params.page);
+  const queryObj = { ...params };
+  const excludedFields = ['page', 'sort', 'page_size'];
+    excludedFields.forEach((field) => {
+      delete queryObj[field];
+    });
+  // const data = await Blog.find({author: params.author}).populate('author');
+  // params.page = parseInt(params.page);
+  const total = await Blog.countDocuments({...queryObj});
+  const data =  await Blog.find({...queryObj})
+    .skip((params.page - 1) * page_size)
+    .limit(page_size)
+    .sort([[sortFieldName, sortOrder]])
+    .populate('author');
+
+    return {data, metadata: {total} };
+    // return data;
 }
 
 async function getAll() {
-  return  await Blog.find().populate('author');
+  return await Blog.find().populate('author');
 }
 
 async function getById(id: string) {
