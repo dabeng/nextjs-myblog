@@ -89,7 +89,7 @@ function BlogSection({ author }: { author: string }) {
                     <span>PUBLISHED: <time>{(new Date(blog.createdAt)).toLocaleDateString('zh-Hans-CN')}</time></span>
                   </span>
                 </p>
-                <p>{blog.title}</p>
+                <Link href={`/blogs/${blog.id}`}>{blog.title}</Link>
                 <p className="is-flex is-justify-content-space-between">
                   <span>
                     <span className="icon">

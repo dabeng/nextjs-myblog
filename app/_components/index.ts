@@ -5,3 +5,4 @@ export * from './NavLink';
 export * from './Spinner';
 export * from './Logo';
 export * from './Pagination';
+export * from './MDXEditor';
