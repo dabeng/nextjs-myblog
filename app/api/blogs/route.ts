@@ -11,16 +11,23 @@ import { IBlogOnePageParams } from "@/_services";
  */
 export { GET, POST };
 
+interface SearchParams {
+  page: number;
+  [property: string]: string | number;
+}
+
 async function GET(req: NextRequest) {
   try {
     let blogs;
-
     if (req.nextUrl.searchParams.size) {
-      const params = {};
+      const params:SearchParams = { page:0 };
       for (const [key, value] of req.nextUrl.searchParams) {
         params[key] = value;
+        if (key === 'page' || key === 'page_size') {
+          params[key] = parseInt(value);
+        }
       }
-      blogs = await blogService.getBySearchParams(params as IBlogOnePageParams);
+      blogs = await blogService.getBySearchParams(params);
     } else {
       blogs = await blogService.getAll();
     }

@@ -82,7 +82,12 @@ function BlogSection({ author }: { author: string }) {
               <div className="content">
                 <p className="is-flex is-justify-content-space-between">
                   <span>{blog.author.username}</span>
-                  <span>PUBLISHED: <time>{(new Date(blog.createdAt)).toLocaleDateString('zh-Hans-CN')}</time></span>
+                  <span className="has-text-weight-light">
+                    { blog.updatedAt > blog.createdAt &&  (
+                      <span className="mr-4">UPDATED: <time>{(new Date(blog.updatedAt)).toLocaleDateString('zh-Hans-CN')}</time></span>
+                    )}
+                    <span>PUBLISHED: <time>{(new Date(blog.createdAt)).toLocaleDateString('zh-Hans-CN')}</time></span>
+                  </span>
                 </p>
                 <p>{blog.title}</p>
                 <p className="is-flex is-justify-content-space-between">
