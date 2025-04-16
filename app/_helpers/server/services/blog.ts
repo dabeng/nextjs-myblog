@@ -11,14 +11,12 @@ export const blogService = {
 };
 
 async function getBySearchParams({ page_size = 4, sortFieldName='updatedAt', sortOrder = 'desc', ...params}: IBlogOnePageParams) {
-  // params.page = parseInt(params.page);
   const queryObj = { ...params };
   const excludedFields = ['page', 'sort', 'page_size'];
     excludedFields.forEach((field) => {
       delete queryObj[field];
     });
-  // const data = await Blog.find({author: params.author}).populate('author');
-  // params.page = parseInt(params.page);
+
   const total = await Blog.countDocuments({...queryObj});
   const data =  await Blog.find({...queryObj})
     .skip((params.page - 1) * page_size)
@@ -27,7 +25,6 @@ async function getBySearchParams({ page_size = 4, sortFieldName='updatedAt', sor
     .populate('author');
 
     return {data, metadata: {total} };
-    // return data;
 }
 
 async function getAll() {
@@ -44,8 +41,7 @@ async function getById(id: string) {
 
 async function create(params: any) {
   const blog = new Blog(params);
-  // const author = await User.findById(params.author);
-  // blog.author = author;
+
   await blog.save();
 }
 

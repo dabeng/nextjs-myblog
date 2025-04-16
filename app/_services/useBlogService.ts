@@ -40,7 +40,7 @@ interface IBlogService {
   getOnePage: (params: IBlogOnePageParams) => Promise<IBlogOnePageResponse>;
   getAllByAuthor: (authorId: string) => Promise<[IBlog]>;
   getAll: () => Promise<[IBlog]>;
-  getById: (id: string) => Promise<IBlog | null>;
+  getById: (id: string) => Promise<IBlog>;
   create: (user: IBlog) => Promise<void>;
   update: (id: string, params: Partial<IBlog>) => Promise<void>;
   delete: (id: string) => Promise<void>;
@@ -66,7 +66,7 @@ function useBlogService(): IBlogService {
       const response = await axios.get('api/blogs');
       return response.data;
     },
-    getById: async (id: string): Promise<IBlog | null> => {
+    getById: async (id: string): Promise<IBlog> => {
       try {
         const response = await axios.get(`/api/blogs/${id}`);
         return response.data;

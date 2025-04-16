@@ -18,6 +18,10 @@ export default function Blog() {
     queryFn: () => blogService.getById(id)
   });
 
+  function formateDate(d: Date) {
+    return (new Date(d)).toLocaleDateString('zh-Hans-CN');
+  }
+
 
   if (isPending) return <div style={{ "height": "600px", "fontSize": "64px" }}><Spinner /></div>;
 
@@ -29,18 +33,22 @@ export default function Blog() {
     </article>
   );
 
-  if (data) return (
+  return (
     <>
-      <p className="has-text-weight-bold has-text-grey-light">
-        <span className="is-size-5 mr-4">{`${data?.author.lastName} ${data?.author.firstName}`}</span>
-        {<span className="is-size-6 is-pulled-right">
-          {`PUBLISHED:${(new Date(data?.createdAt)).toLocaleDateString('zh-Hans-CN')} ${data?.updatedAt ? 'UPDATED:' + data?.updatedAt : ''}`}
-        </span>
+      <p className="has-text-weight-bold has-text-grey-light mt-6 mb-4">
+        <span className="is-size-5 mr-4">{`${data.author.lastName} ${data.author.firstName}`}</span>
+        {data.updatedAt &&
+          <span className="is-size-6 is-pulled-right ml-4">
+            UPDATED: {formateDate(data.updatedAt)}
+          </span>
         }
+        <span className="is-size-6 is-pulled-right">
+          PUBLISHED: {formateDate(data.createdAt)}
+        </span>
       </p>
       <div className="content">
-        <p className="title is-1">{data?.title}</p>
-        <ForwardRefEditor markdown={data?.content as string} contentEditableClassName="prose" />
+        <p className="title is-1">{data.title}</p>
+        <ForwardRefEditor markdown={data.content} contentEditableClassName="prose" />
       </div>
     </>
   );
