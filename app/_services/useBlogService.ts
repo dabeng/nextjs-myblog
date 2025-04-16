@@ -71,8 +71,7 @@ function useBlogService(): IBlogService {
         const response = await axios.get(`/api/blogs/${id}`);
         return response.data;
       } catch (error: any) {
-        alertService.error(error);
-        return null;
+        throw error;
       }
     },
     create: blog => {

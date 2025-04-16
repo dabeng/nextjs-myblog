@@ -10,7 +10,7 @@ The blog page renders the add/edit user component with the specified user so the
 * is set to "edit" mode.
 */
 export default function Blog() {
-const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const blogService = useBlogService();
 
   const { data, isPending, isError, error } = useQuery({
@@ -20,12 +20,28 @@ const { id } = useParams<{ id: string }>();
 
 
   if (isPending) return <div style={{ "height": "600px", "fontSize": "64px" }}><Spinner /></div>;
-  if (isError) return <p>Error loading blog: {error.message}</p>;
 
-  return (
-  <>
-    <p className="title">{data?.title}</p>
-    <ForwardRefEditor markdown={data?.content as string} contentEditableClassName="prose"/>
+  if (isError) return (
+    <article className="message is-danger">
+      <div className="message-body">
+        Error loading blog: {error.message}
+      </div>
+    </article>
+  );
+
+  if (data) return (
+    <>
+      <p className="has-text-weight-bold has-text-grey-light">
+        <span className="is-size-5 mr-4">{`${data?.author.lastName} ${data?.author.firstName}`}</span>
+        {<span className="is-size-6 is-pulled-right">
+          {`PUBLISHED:${(new Date(data?.createdAt)).toLocaleDateString('zh-Hans-CN')} ${data?.updatedAt ? 'UPDATED:' + data?.updatedAt : ''}`}
+        </span>
+        }
+      </p>
+      <div className="content">
+        <p className="title is-1">{data?.title}</p>
+        <ForwardRefEditor markdown={data?.content as string} contentEditableClassName="prose" />
+      </div>
     </>
   );
 

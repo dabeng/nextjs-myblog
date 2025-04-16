@@ -36,7 +36,7 @@ async function getAll() {
 
 async function getById(id: string) {
   try {
-    return await Blog.findById(id);
+    return await Blog.findById(id).populate('author');
   } catch {
     throw 'blog Not Found';
   }
