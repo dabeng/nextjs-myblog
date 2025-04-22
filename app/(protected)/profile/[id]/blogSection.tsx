@@ -1,6 +1,8 @@
 
 "use client"
 
+import React, {MouseEvent} from 'react';
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
@@ -12,6 +14,7 @@ import { Pagination } from "_components";
 export default BlogSection;
 
 function BlogSection({ author }: { author: string }) {
+  const router = useRouter();
   const alertService = useAlertService();
   const blogService = useBlogService();
 
@@ -50,6 +53,16 @@ function BlogSection({ author }: { author: string }) {
     }
   }
 
+  function openBlog(e: MouseEvent, id: string) {
+    try {
+      if (['blog-wrapper', 'blog-header', 'blog-title', 'blog-footer'].some(className => (e.target as HTMLDivElement).classList.contains(className))) {
+        router.push(`/blogs/${id}`);
+      }
+    } catch (error: any) {
+      alertService.error(error);
+    }
+  }
+
   return (
     <>
       <p>
@@ -77,10 +90,10 @@ function BlogSection({ author }: { author: string }) {
       }
       {
         blogs?.data.map(blog => (
-          <div key={blog.id} className="card">
-            <div className="card-content" style={{ padding: '1rem' }}>
+          <div key={blog.id} className="card" onClick={(e) => openBlog(e, blog.id)}>
+            <div className="card-content blog-wrapper" style={{ padding: '1rem' }}>
               <div className="content">
-                <p className="is-flex is-justify-content-space-between">
+                <p className="is-flex is-justify-content-space-between blog-header">
                   <span>{blog.author.username}</span>
                   <span className="has-text-weight-light">
                     { blog.updatedAt > blog.createdAt &&  (
@@ -89,8 +102,8 @@ function BlogSection({ author }: { author: string }) {
                     <span>PUBLISHED: <time>{(new Date(blog.createdAt)).toLocaleDateString('zh-Hans-CN')}</time></span>
                   </span>
                 </p>
-                <Link href={`/blogs/${blog.id}`}>{blog.title}</Link>
-                <p className="is-flex is-justify-content-space-between">
+                <p className='blog-title'>{blog.title}</p>
+                <p className="is-flex is-justify-content-space-between blog-footer">
                   <span>
                     <span className="icon">
                       <i className="fa-regular fa-thumbs-up"></i>
