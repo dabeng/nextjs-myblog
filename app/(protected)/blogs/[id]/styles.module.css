@@ -1,0 +1,7 @@
+.reaction-item:hover {
+  cursor: pointer;
+}
+
+.reaction-item:hover .reaction-number, .reaction-item:hover .reaction-enum {
+  color: hsl(171, 100%, 41%);
+}

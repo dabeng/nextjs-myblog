@@ -1,9 +1,9 @@
 import { model, models, Schema } from 'mongoose';
 
-export { Vote };
+export { Reaction };
 
 const schema = new Schema({
-  attitude: { type: String, required: true, enum: ['Upvote', 'Funny', 'Love', 'Surprise', 'Angry', 'Sad'] },
+  reaction: { type: String, required: true, enum: ['Upvote', 'Funny', 'Love', 'Surprise', 'Angry', 'Sad'] },
   user: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   blog: [{ type: Schema.Types.ObjectId, ref: 'Blog' }]
 }, {
@@ -20,5 +20,5 @@ schema.set('toJSON', {
   }
 });
 
-const Vote = models.Vote || model('Vote', schema);
+const Reaction = models.Reaction || model('Reaction', schema);
 

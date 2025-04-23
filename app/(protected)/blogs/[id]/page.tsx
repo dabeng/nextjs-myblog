@@ -5,6 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Spinner, ForwardRefEditor } from "_components";
 import { useBlogService, IBlog } from "_services";
 import { isErrored } from "stream";
+
+import styles from "./styles.module.css";
 /*
 The blog page renders the add/edit user component with the specified user so the component
 * is set to "edit" mode.
@@ -56,12 +58,14 @@ export default function Blog() {
         <p className="title is-5 has-text-centered">10 Responses</p>
         <nav className="level is-mobile">
           <div className="level-item has-text-centered">
-            <div>
+            <div className={styles['reaction-item']}>
               <p className="heading">
                 <span className="icon">
                   <i className="fa-regular fa-thumbs-up fa-3x"></i>
-                </span></p>
-              <p className="subtitle">Upvote</p>
+                </span>
+              </p>
+              <p className={`title is-5 ${styles['reaction-number']}`}>0</p>
+              <p className={`title is-6 ${styles['reaction-enum']}`}>Upvote</p>
             </div>
           </div>
           <div className="level-item has-text-centered">
