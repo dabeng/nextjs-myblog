@@ -3,10 +3,12 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { Spinner } from "_components";
-import { useReactionService, IBlog } from "_services";
-import { isErrored } from "stream";
+import { useReactionService, Reaction } from "_services";
+
 
 import styles from "./styles.module.css";
+import { Interface } from "readline";
+import { string } from "zod";
 /*
 The blog page renders the add/edit user component with the specified user so the component
 * is set to "edit" mode.
@@ -17,7 +19,32 @@ export default function ReactionSection() {
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ['reactions', 'list', id],
-    queryFn: () => reactionService.getAllBySearchParams({blog: id})
+    queryFn: () => reactionService.getAllBySearchParams({ blog: id })
+  });
+
+  const reactionData = Object.entries(Reaction).map(([key, value]) => {
+    let item = { caption: value, count: data?.filter(item => item.reaction === key).length ?? 0, icon: '' };
+    switch (key) {
+      case Reaction.Upvote:
+        item.icon = 'fa-thumbs-up';
+        break;
+      case Reaction.Funny:
+        item.icon = 'fa-face-laugh-squint';
+        break;
+      case Reaction.Love:
+        item.icon = 'fa-face-kiss-wink-heart';
+        break;
+      case Reaction.Surprised:
+        item.icon = 'fa-face-surprise';
+        break;
+      case Reaction.Angry:
+        item.icon = 'fa-face-angry';
+        break;
+      case Reaction.Sad:
+        item.icon = 'fa-face-sad-tear';
+        break;
+    }
+    return item;
   });
 
   if (isPending) return <div style={{ "height": "600px", "fontSize": "64px" }}><Spinner /></div>;
@@ -36,62 +63,19 @@ export default function ReactionSection() {
       <p className="title is-4 has-text-centered">What do you think?</p>
       <p className="title is-5 has-text-centered">10 Responses</p>
       <nav className="level is-mobile">
-        <div className="level-item has-text-centered">
-          <div className={styles['reaction-item']}>
-            <p className="heading">
-              <span className="icon">
-                <i className="fa-regular fa-thumbs-up fa-3x"></i>
-              </span>
-            </p>
-            <p className={`title is-5 ${styles['reaction-number']}`}>{data.length + 2}</p>
-            <p className={`title is-6 ${styles['reaction-enum']}`}>Upvote</p>
+        {reactionData.map(r => (
+          <div key={r.caption} className="level-item has-text-centered">
+            <div className={styles['reaction-item']}>
+              <p className="heading">
+                <span className="icon">
+                  <i className={`fa-regular fa-3x ${r.icon}`}></i>
+                </span>
+              </p>
+              <p className={`title is-5 ${styles['reaction-number']}`}>{r.count}</p>
+              <p className={`title is-6 ${styles['reaction-enum']}`}>{r.caption}</p>
+            </div>
           </div>
-        </div>
-        <div className="level-item has-text-centered">
-          <div>
-            <p className="heading">
-              <span className="icon">
-                <i className="fa-regular fa-face-laugh-squint fa-3x"></i>
-              </span></p>
-            <p className="subtitle">Funny</p>
-          </div>
-        </div>
-        <div className="level-item has-text-centered">
-          <div>
-            <p className="heading">
-              <span className="icon">
-                <i className="fa-regular fa-face-kiss-wink-heart fa-3x"></i>
-              </span></p>
-            <p className="subtitle">Love</p>
-          </div>
-        </div>
-        <div className="level-item has-text-centered">
-          <div>
-            <p className="heading">
-              <span className="icon">
-                <i className="fa-regular fa-face-surprise fa-3x"></i>
-              </span></p>
-            <p className="subtitle">Surprise</p>
-          </div>
-        </div>
-        <div className="level-item has-text-centered">
-          <div>
-            <p className="heading">
-              <span className="icon is-large">
-                <i className="fa-regular fa-face-angry fa-3x"></i>
-              </span></p>
-            <p className="subtitle">Angry</p>
-          </div>
-        </div>
-        <div className="level-item has-text-centered">
-          <div>
-            <p className="heading">
-              <span className="icon">
-                <i className="fa-regular fa-face-sad-tear fa-3x"></i>
-              </span></p>
-            <p className="subtitle">Sad</p>
-          </div>
-        </div>
+        ))}
       </nav>
     </div>
   );

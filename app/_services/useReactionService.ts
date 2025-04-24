@@ -3,7 +3,7 @@ import axios from "axios";
 import { useAlertService, IUser, IBlog } from "_services";
 import type  { IComment } from "./useCommentService";
 
-export { useReactionService };
+export { useReactionService, Reaction };
 export type { IReaction, IReactionParams };
 
 /* --- Reaction Service React Hook ---
@@ -11,8 +11,18 @@ export type { IReaction, IReactionParams };
  * and the Next.js back-end API for everything related to blogs.
  */
 
+enum Reaction {
+  Upvote = 'Upvote',
+  Funny = 'Funny',
+  Love = 'Love',
+  Surprised = 'Surprised',
+  Angry = 'Angry',
+  Sad = 'Sad',
+}
+
 interface IReaction {
   id: string;
+  reaction: Reaction;
   user: IUser;
   blog: IBlog;
   createdAt: Date;
