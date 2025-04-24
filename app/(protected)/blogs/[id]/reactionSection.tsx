@@ -2,8 +2,8 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
-import { Spinner, ForwardRefEditor } from "_components";
-import { useBlogService, IBlog } from "_services";
+import { Spinner } from "_components";
+import { useReactionService, IBlog } from "_services";
 import { isErrored } from "stream";
 
 import styles from "./styles.module.css";
@@ -13,23 +13,19 @@ The blog page renders the add/edit user component with the specified user so the
 */
 export default function ReactionSection() {
   const { id } = useParams<{ id: string }>();
-  const blogService = useBlogService();
+  const reactionService = useReactionService();
 
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ['blogs', 'detail', id],
-    queryFn: () => blogService.getById(id)
+    queryKey: ['reactions', 'list', id],
+    queryFn: () => reactionService.getAllBySearchParams({blog: id})
   });
-
-  function formateDate(d: Date) {
-    return (new Date(d)).toLocaleDateString('zh-Hans-CN');
-  }
 
   if (isPending) return <div style={{ "height": "600px", "fontSize": "64px" }}><Spinner /></div>;
 
   if (isError) return (
     <article className="message is-danger">
       <div className="message-body">
-        Error loading blog: {error.message}
+        Error loading reactions: {error.message}
       </div>
     </article>
   );
@@ -47,7 +43,7 @@ export default function ReactionSection() {
                 <i className="fa-regular fa-thumbs-up fa-3x"></i>
               </span>
             </p>
-            <p className={`title is-5 ${styles['reaction-number']}`}>0</p>
+            <p className={`title is-5 ${styles['reaction-number']}`}>{data.length + 2}</p>
             <p className={`title is-6 ${styles['reaction-enum']}`}>Upvote</p>
           </div>
         </div>

@@ -24,7 +24,7 @@ async function GET(req: NextRequest) {
       for (const [key, value] of req.nextUrl.searchParams) {
         params[key] = value;
       }
-      reactions = await reactionService.getAllBySearchParams(params);
+      reactions = await reactionService.getBySearchParams(params);
     } else {
       reactions = await reactionService.getAll();
     }
