@@ -11,6 +11,8 @@ import { useBlogService, IBlog, useAlertService } from "_services";
 import { Spinner } from "_components";
 import { Pagination } from "_components";
 
+import styles from "./styles.module.css";
+
 export default BlogSection;
 
 function BlogSection({ author }: { author: string }) {
@@ -90,7 +92,7 @@ function BlogSection({ author }: { author: string }) {
       }
       {
         blogs?.data.map(blog => (
-          <div key={blog.id} className="card" onClick={(e) => openBlog(e, blog.id)}>
+          <div key={blog.id} className={`card ${styles['blog-item']}`} onClick={(e) => openBlog(e, blog.id)}>
             <div className="card-content blog-wrapper" style={{ padding: '1rem' }}>
               <div className="content">
                 <p className="is-flex is-justify-content-space-between blog-header">
