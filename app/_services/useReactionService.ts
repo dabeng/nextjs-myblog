@@ -65,8 +65,8 @@ function useReactionService(): IReactionService {
         throw error;
       }
     },
-    create: reaction => {
-      return axios.post('/api/reactions', reaction);
+    create: async (reaction) => {
+      await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/reactions`, reaction);
     },
     update: async (id, params) => {
       await axios.put(`/api/reactions/${id}`, params);

@@ -29,20 +29,22 @@ async function getBySearchParams(params: IReactionParams) {
 }
 
 async function create(params: any) {
-  // validate
-  if (await Reaction.findOne({ username: params.username })) {
-    throw 'Username "' + params.username + '" is already taken';
+  // validate if user has submitted the same reaction
+  if (await Reaction.findOne(params)) {
+    return;
   }
 
-  const user = new Reaction(params);
-
-  // hash password
-  if (params.password) {
-    user.hash = bcrypt.hashSync(params.password, 10);
+  // validate if user has submitted the different reaction
+  const existReaction = await Reaction.findOne({user: params.user, blog: params.blog});
+  if (existReaction) {
+    Object.assign(existReaction, params);
+    await existReaction.save();
+    return;
   }
 
-  // save user
-  await user.save();
+  // save reaction
+  const reaction = new Reaction(params);
+  await reaction.save();
 }
 
 async function update(id: string, params: any) {

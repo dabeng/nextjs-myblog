@@ -38,9 +38,9 @@ async function GET(req: NextRequest) {
 async function POST(req: NextRequest) {
   try {
     const schema = z.object({
-      title: z.string(),
-      content: z.string(),
-      author: z.string() // user.id
+      user: z.string(),
+      blog: z.string(),
+      reaction: z.string()
     });
     await validateMiddleware(req, schema);
 

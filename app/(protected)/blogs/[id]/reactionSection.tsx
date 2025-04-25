@@ -1,10 +1,12 @@
 "use client";
 import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Spinner } from "_components";
 import { useReactionService, Reaction } from "_services";
-
+import type { IReaction } from "_services";
 
 import styles from "./styles.module.css";
 import { Interface } from "readline";
@@ -14,6 +16,7 @@ The blog page renders the add/edit user component with the specified user so the
 * is set to "edit" mode.
 */
 export default function ReactionSection() {
+  const {data: session} = useSession();
   const { id } = useParams<{ id: string }>();
   const reactionService = useReactionService();
 
@@ -23,7 +26,7 @@ export default function ReactionSection() {
   });
 
   const reactionData = Object.entries(Reaction).map(([key, value]) => {
-    let item = { caption: value, count: data?.filter(item => item.reaction === key).length ?? 0, icon: '' };
+    let item = { key, caption: value, count: data?.filter(item => item.reaction === key).length, icon: '' };
     switch (key) {
       case Reaction.Upvote:
         item.icon = 'fa-thumbs-up';
@@ -47,7 +50,23 @@ export default function ReactionSection() {
     return item;
   });
 
-  if (isPending) return <div style={{ "height": "600px", "fontSize": "64px" }}><Spinner /></div>;
+  const queryClient = useQueryClient();
+  const createReactionMutation = useMutation({
+    mutationFn: (data: IReaction) => {
+      return reactionService.create(data);
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ['reactions', 'list']
+      });
+    },
+  });
+
+  async function submitReaction(reaction: string) {
+    await createReactionMutation.mutateAsync({reaction, user: session?.user.id, blog: id } as any);
+  }
+
+  if (isPending) return <div style={{ "height": "330px", "fontSize": "64px" }}><Spinner /></div>;
 
   if (isError) return (
     <article className="message is-danger">
@@ -65,7 +84,7 @@ export default function ReactionSection() {
       <nav className="level is-mobile">
         {reactionData.map(r => (
           <div key={r.caption} className="level-item has-text-centered">
-            <div className={styles['reaction-item']}>
+            <div className={styles['reaction-item']} onClick={() => submitReaction(r.key)}>
               <p className="heading">
                 <span className="icon">
                   <i className={`fa-regular fa-3x ${r.icon}`}></i>

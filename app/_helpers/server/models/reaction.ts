@@ -3,9 +3,9 @@ import { model, models, Schema } from 'mongoose';
 export { Reaction };
 
 const schema = new Schema({
-  reaction: { type: String, required: true, enum: ['Upvote', 'Funny', 'Love', 'Surprise', 'Angry', 'Sad'] },
-  user: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  blog: [{ type: Schema.Types.ObjectId, ref: 'Blog' }]
+  reaction: { type: String, required: true, enum: ['Upvote', 'Funny', 'Love', 'Surprised', 'Angry', 'Sad'] },
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
+  blog: { type: Schema.Types.ObjectId, ref: 'Blog' }
 }, {
   // add createdAt and updatedAt timestamps
   timestamps: true
