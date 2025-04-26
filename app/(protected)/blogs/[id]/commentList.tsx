@@ -1,12 +1,23 @@
 "use client";
+
+import React, { useRef } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { Spinner, ForwardRefEditor } from "_components";
 import { useBlogService, IBlog } from "_services";
 import { isErrored } from "stream";
+import {
+  MDXEditor, headingsPlugin, listsPlugin, quotePlugin, thematicBreakPlugin, UndoRedo,
+  BoldItalicUnderlineToggles, toolbarPlugin, InsertTable, InsertImage, imagePlugin, tablePlugin,
+  ListsToggle, Separator, InsertThematicBreak, CodeBlockEditorDescriptor, useCodeBlockEditorContext,
+  CreateLink, linkPlugin, linkDialogPlugin, BlockTypeSelect,
+  insertCodeBlock$
+} from '@mdxeditor/editor';
+import '@mdxeditor/editor/style.css';
 
 import styles from "./styles.module.css";
+import { relative } from "path";
 /*
 The blog page renders the add/edit user component with the specified user so the component
 * is set to "edit" mode.
@@ -34,94 +45,114 @@ export default function CommentList() {
     </article>
   );*/
 
+  const blogCommentRef = useRef(null);
+
   return (
     <div className="content box">
       <p className="title is-4">Comments</p>
-      <article className="media">
+      <article className="media" style={{ position: 'relative' }}>
         <figure className="media-left">
           <p className="image is-64x64">
             <img src="https://bulma.io/assets/images/placeholders/128x128.png" />
           </p>
         </figure>
         <div className="media-content">
-          <div className="field">
-            <p className="control">
-              <textarea className="textarea" placeholder="Add a comment..."></textarea>
-            </p>
-          </div>
-          <div className="field">
-            <p className="control">
-              <button className="button">Post comment</button>
-            </p>
-          </div>
-        </div>
-      </article>
-      <article className="media">
-        <figure className="media-left">
-          <p className="image is-64x64">
-            <img src="https://bulma.io/assets/images/placeholders/128x128.png" />
+          <div className="field" style={{position: 'absolute',right: '4px', top: '2px', zIndex: 3}}>
+          <p className="control">
+            <button className="button is-pulled-right	">Comment</button>
           </p>
-        </figure>
-        <div className="media-content">
-          <div className="content">
-            <p>
-              <strong>Barbara Middleton</strong>
-              <br />
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta eros
-              lacus, nec ultricies elit blandit non. Suspendisse pellentesque mauris
-              sit amet dolor blandit rutrum. Nunc in tempus turpis.
-              <br />
-              <small><a>Like</a> · <a>Reply</a> · 3 hrs</small>
-            </p>
-          </div>
-
-          <article className="media">
-            <figure className="media-left">
-              <p className="image is-48x48">
-                <img src="https://bulma.io/assets/images/placeholders/96x96.png" />
-              </p>
-            </figure>
-            <div className="media-content">
-              <div className="content">
-                <p>
-                  <strong>Sean Brown</strong>
-                  <br />
-                  Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque
-                  habitant morbi tristique senectus et netus et malesuada fames ac
-                  turpis egestas. Aliquam blandit nisl a nulla sagittis, a lobortis
-                  leo feugiat.
-                  <br />
-                  <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>
-                </p>
-              </div>
-            </div>
-          </article>
-
-          <article className="media">
-            <figure className="media-left">
-              <p className="image is-48x48">
-                <img src="https://bulma.io/assets/images/placeholders/96x96.png" />
-              </p>
-            </figure>
-            <div className="media-content">
-              <div className="content">
-                <p>
-                  <strong>Kayli Eunice </strong>
-                  <br />
-                  Sed convallis scelerisque mauris, non pulvinar nunc mattis vel.
-                  Maecenas varius felis sit amet magna vestibulum euismod malesuada
-                  cursus libero. Vestibulum ante ipsum primis in faucibus orci luctus
-                  et ultrices posuere cubilia Curae; Phasellus lacinia non nisl id
-                  feugiat.
-                  <br />
-                  <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>
-                </p>
-              </div>
-            </div>
-          </article>
         </div>
-      </article>
+        <div className="field">
+          <div className="control">
+            <ForwardRefEditor ref={blogCommentRef} markdown={''} contentEditableClassName={`prose ${styles.contentEditor}`} plugins={[
+              toolbarPlugin({
+                toolbarClassName: 'my-classname',
+                toolbarContents: () => (
+                  <>
+                    <BlockTypeSelect />
+                    <BoldItalicUnderlineToggles /><Separator />
+                    <ListsToggle /><Separator />
+                    <CreateLink />
+                    <InsertImage />
+                    <InsertTable />
+                    <InsertThematicBreak />
+                  </>
+                )
+              }),
+              linkPlugin(), linkDialogPlugin(),
+              tablePlugin(),
+              headingsPlugin(), listsPlugin(), quotePlugin(), thematicBreakPlugin()]}
+            />
+          </div>
+        </div>
     </div>
+      </article >
+    <article className="media">
+      <figure className="media-left">
+        <p className="image is-64x64">
+          <img src="https://bulma.io/assets/images/placeholders/128x128.png" />
+        </p>
+      </figure>
+      <div className="media-content">
+        <div className="content">
+          <p>
+            <strong>Barbara Middleton</strong>
+            <br />
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta eros
+            lacus, nec ultricies elit blandit non. Suspendisse pellentesque mauris
+            sit amet dolor blandit rutrum. Nunc in tempus turpis.
+            <br />
+            <small><a>Like</a> · <a>Reply</a> · 3 hrs</small>
+          </p>
+        </div>
+
+        <article className="media">
+          <figure className="media-left">
+            <p className="image is-48x48">
+              <img src="https://bulma.io/assets/images/placeholders/96x96.png" />
+            </p>
+          </figure>
+          <div className="media-content">
+            <div className="content">
+              <p>
+                <strong>Sean Brown</strong>
+                <br />
+                Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque
+                habitant morbi tristique senectus et netus et malesuada fames ac
+                turpis egestas. Aliquam blandit nisl a nulla sagittis, a lobortis
+                leo feugiat.
+                <br />
+                <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article className="media">
+          <figure className="media-left">
+            <p className="image is-48x48">
+              <img src="https://bulma.io/assets/images/placeholders/96x96.png" />
+            </p>
+          </figure>
+          <div className="media-content">
+            <div className="content">
+              <p>
+                <strong>Kayli Eunice </strong>
+                <br />
+                Sed convallis scelerisque mauris, non pulvinar nunc mattis vel.
+                Maecenas varius felis sit amet magna vestibulum euismod malesuada
+                cursus libero. Vestibulum ante ipsum primis in faucibus orci luctus
+                et ultrices posuere cubilia Curae; Phasellus lacinia non nisl id
+                feugiat.
+                <br />
+                <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </article>
+    </div >
   );
 
 }

@@ -5,3 +5,11 @@
 .reaction-item:hover .reaction-number, .reaction-item:hover .reaction-enum {
   color: hsl(171, 100%, 41%);
 }
+
+.contentEditor {
+  border: 1px solid #eee;
+  border-top: none;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  min-height: 10rem;
+}
