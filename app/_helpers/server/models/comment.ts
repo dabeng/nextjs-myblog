@@ -4,9 +4,10 @@ export { Comment };
 
 const schema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User' },
-  content: { type: String, required: true },
   blog: { type: Schema.Types.ObjectId, ref: 'Blog' },
-  parentComment: { type: Schema.Types.ObjectId, ref: 'Comment' }
+  content: { type: String },
+  vote: { type: String, enum: ['Upvote', 'Downvote'] },
+  parentComment: { type: Schema.Types.ObjectId, ref: 'Comment', required: false }
 }, {
   // add createdAt and updatedAt timestamps
   timestamps: true
@@ -21,5 +22,5 @@ schema.set('toJSON', {
   }
 });
 
-const Comment = models.User || model('Comment', schema);
+const Comment = models.Comment || model('Comment', schema);
 

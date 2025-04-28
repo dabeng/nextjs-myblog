@@ -1,12 +1,53 @@
 import { Comment } from '../models';
+import { IComment, ICommentOnePageParams } from '@/_services';
+
+interface IParentComment extends IComment {
+  children: Array<IComment>
+}
 
 export const commentService = {
+  getBySearchParams,
   getAll,
   getById,
   create,
   update,
   delete: _delete
 };
+
+async function appendSubcomments(data: Array<IParentComment>) {
+  const parentComments = data.filter(c => c.parentComment !== null);
+  const childrenComments = data.filter(c => c.parentComment === null);
+  parentComments.forEach(async (p) => {
+    const data = await Comment.find({ parentComment: p.id })
+      .sort([['createdAt', 'asc']])
+      .populate('author');
+
+    if (data) {
+      p.children = data;
+    }
+  });
+
+  return parentComments;
+}
+
+async function getBySearchParams({ page_size = 4, sortFieldName = 'createdAt', sortOrder = 'desc', ...params }: ICommentOnePageParams) {
+  const queryObj = { ...params };
+  const excludedFields = ['page', 'page_size', 'sortFieldName', 'sortOrder'];
+  excludedFields.forEach((field) => {
+    delete queryObj[field];
+  });
+
+  const total = await Comment.countDocuments({ ...queryObj, parentComment: null });
+  const data = await Comment.find({ ...queryObj, parentComment: null })
+    .skip((params.page - 1) * page_size)
+    .limit(page_size)
+    .sort([[sortFieldName, sortOrder]])
+    .populate('author');
+
+  const nestedComments = await appendSubcomments(data);
+
+  return { data: nestedComments, metadata: { total } };
+}
 
 async function getAll() {
   return await Comment.find();

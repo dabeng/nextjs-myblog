@@ -3,24 +3,46 @@ import axios from "axios";
 import { useAlertService } from "_services";
 
 export { useCommentService };
-export type { IComment };
+export type { IComment, ICommentOnePageParams };
 
 /* --- Blog Service React Hook ---
  * It encapsulates client-side logic and handles HTTP communication between the React front-end
  * and the Next.js back-end API for everything related to blogs.
  */
 
+enum Vote {
+  Upvote = 'Upvote',
+  Funny = 'Downvote',
+}
+
 interface IComment {
   id: string;
   author: string;
-  content: string;
   blog: string;
+  content: string;
+  vote: Vote;
   parentComment: string;
+}
+
+interface ICommentOnePageResponse {
+  data: [IComment];
+  metadata: {
+    total: number
+  }
+}
+
+interface ICommentOnePageParams {
+  blog?: string;
+  page: number;
+  page_size?: number;
+  sortFieldName?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 interface ICommentService {
   getAll: () => Promise<[IComment]>;
-  getById: (id: string) => Promise<IComment | null>;
+  getOnePage: (params: ICommentOnePageParams) => Promise<ICommentOnePageResponse>;
+  getById: (id: string) => Promise<IComment>;
   create: (user: IComment) => Promise<void>;
   update: (id: string, params: Partial<IComment>) => Promise<void>;
   delete: (id: string) => Promise<void>;
@@ -34,13 +56,22 @@ function useCommentService(): ICommentService {
       const response = await axios.get('api/comments');
       return response.data;
     },
-    getById: async (id: string): Promise<IComment | null> => {
+    getOnePage: async (params: ICommentOnePageParams): Promise<ICommentOnePageResponse> => {
+      try {
+        const response = await axios.get(`/api/comments`, {
+          params: params
+        });
+        return response.data;
+      } catch (error: any) {
+        throw error;
+      }
+    },
+    getById: async (id: string): Promise<IComment> => {
       try {
         const response = await axios.get(`/api/comments/${id}`);
         return response.data;
       } catch (error: any) {
-        alertService.error(error);
-        return null;
+        throw error;
       }
     },
     create: comment => {

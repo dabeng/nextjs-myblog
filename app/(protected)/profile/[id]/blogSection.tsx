@@ -1,7 +1,7 @@
 
 "use client"
 
-import React, {MouseEvent} from 'react';
+import React, { MouseEvent } from 'react';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
@@ -98,7 +98,7 @@ function BlogSection({ author }: { author: string }) {
                 <p className="is-flex is-justify-content-space-between blog-header">
                   <span>{blog.author.username}</span>
                   <span className="has-text-weight-light">
-                    { blog.updatedAt > blog.createdAt &&  (
+                    {blog.updatedAt > blog.createdAt && (
                       <span className="mr-4">UPDATED: <time>{(new Date(blog.updatedAt)).toLocaleDateString('zh-Hans-CN')}</time></span>
                     )}
                     <span>PUBLISHED: <time>{(new Date(blog.createdAt)).toLocaleDateString('zh-Hans-CN')}</time></span>
