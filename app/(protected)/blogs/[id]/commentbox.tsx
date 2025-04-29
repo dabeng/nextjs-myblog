@@ -19,14 +19,19 @@ import '@mdxeditor/editor/style.css';
 import styles from "./styles.module.css";
 
 interface ComentBoxProps {
-  onPostComment: Function
+  onPostComment: Function;
+  parentComment?: string;
 };
 
-export default function CommentBox({ onPostComment }: ComentBoxProps) {
+export default function CommentBox({ onPostComment, parentComment}: ComentBoxProps) {
   const commentRef = useRef(null);
 
   function submitComment() {
-    onPostComment(commentRef.current?.getMarkdown());
+    if (parentComment) {
+      onPostComment(commentRef.current?.getMarkdown(), parentComment);
+    } else {
+      onPostComment(commentRef.current?.getMarkdown());
+    }
   }
 
   return (

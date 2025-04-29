@@ -21,7 +21,7 @@ interface IComment {
   blog: string;
   content: string;
   vote: Vote;
-  parentComment: string;
+  parentComment?: string;
 }
 
 interface ICommentOnePageResponse {

@@ -17,15 +17,24 @@ export const commentService = {
 async function appendSubcomments(data: Array<IParentComment>) {
   const parentComments = data.filter(c => c.parentComment !== null);
   const childrenComments = data.filter(c => c.parentComment === null);
-  parentComments.forEach(async (p) => {
-    const data = await Comment.find({ parentComment: p.id })
+  for await (const p of parentComments) {
+    const d = Comment.find({ parentComment: p.id })
       .sort([['createdAt', 'asc']])
       .populate('author');
 
-    if (data) {
-      p.children = data;
+    if (d) {
+      p.children = d;
     }
-  });
+  }
+  // parentComments.forEach(async (p) => {
+  //   const data = await Comment.find({ parentComment: p.id })
+  //     .sort([['createdAt', 'asc']])
+  //     .populate('author');
+
+  //   if (data) {
+  //     p.children = data;
+  //   }
+  // });
 
   return parentComments;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -24,10 +24,29 @@ export default function CommentList() {
   const commentService = useCommentService();
 
   const [page, setPage] = useState(1);
-  const { data: comments, isPending, isError, error } = useQuery({
+  const { data: comments, isPending, isError, error, status } = useQuery({
     queryKey: ['comments', 'list', id, page],
     queryFn: () => commentService.getOnePage({ author: session?.user.id, blog: id, page })
   });
+  const [boxVisible, setBoxVisible] = useState(Array<boolean>);
+
+  useEffect(() => {
+    if (status === 'success') {
+      setBoxVisible(comments.data.map(c => false));
+    }
+  }, [status, comments]);
+  // if (comments?.data) {
+  //   setBoxVisible(comments.data.map(c => false));
+  // }
+  function showBox(targetIndex: number) {
+    setBoxVisible(boxVisible?.map((v, i) => {
+      if (i === targetIndex) {
+        return !v;
+      } else {
+        return v;
+      }
+    }));
+  }
 
   function formateDate(d: Date) {
     return (new Date(d)).toLocaleDateString('zh-Hans-CN');
@@ -40,20 +59,18 @@ export default function CommentList() {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: ['comments', 'list']
+        queryKey: ['comments', 'list', id]
       });
     },
   });
 
-  async function postComment(commentContent: string) {
+  async function postComment(commentContent: string, parentComment?: string) {
     try {
-      await createCommentMutation.mutateAsync({ author: session?.user.id, blog: id, content: commentContent });
+      await createCommentMutation.mutateAsync({ author: session?.user.id, blog: id, parentComment, content: commentContent });
     } catch (error: any) {
       alertService.error(error);
     }
   }
-
-
 
   return (
     <div className="content box">
@@ -97,7 +114,7 @@ export default function CommentList() {
         )
       }
       {
-        comments?.data.map(comment => (
+        comments?.data.map((comment, i) => (
           <article className="media" key={comment.id}>
             <figure className="media-left">
               <p className="image is-64x64">
@@ -106,16 +123,69 @@ export default function CommentList() {
             </figure>
             <div className="media-content">
               <div className="content">
-                <p>
-                  <strong>{comment.author.lastName + ' ' + comment.author.firstName}</strong>
-                </p>
-                <p>
+                <div>
+                  <span className="author-fullname">{comment.author.lastName + ' ' + comment.author.firstName}</span>
+                </div>
+                <div>
                   {comment.content}
-                </p>
-                <p>
-                <small><a>Like</a> · <a>Reply</a> · 3 hrs</small>
-                </p>
+                </div>
+                <div className="buttons are-small">
+                  <button className="button is-white">
+                    <span className="icon">
+                      <i className="fa-regular fa-thumbs-up"></i>
+                    </span>
+                    <span>0</span>
+                  </button>
+                  <button className="button is-white">
+                    <span className="icon">
+                      <i className="fa-regular fa-thumbs-down"></i>
+                    </span>
+                    <span>0</span>
+                  </button>
+                  <button className="button is-white" onClick={() => showBox(i)}>Reply</button>
+                </div>
+                {boxVisible && boxVisible[i] && (
+                  <div style={{ position: 'relative' }}>
+                    <CommentBox onPostComment={postComment} parentComment={comment.id} />
+                  </div>
+                )
+                }
               </div>
+              {comment?.children?.map(childComment => (
+                <article className="media">
+                  <figure className="media-left">
+                    <p className="image is-48x48">
+                      <img src="https://bulma.io/assets/images/placeholders/96x96.png" />
+                    </p>
+                  </figure>
+                  <div className="media-content">
+                    <div className="content">
+                      <div>
+                        <span className="author-fullname">
+                          {childComment.author.lastName + ' ' + childComment.author.firstName}
+                        </span>
+                      </div>
+                      <div>
+                        {childComment.content}
+                      </div>
+                      <div className="buttons are-small">
+                        <button className="button is-white">
+                          <span className="icon">
+                            <i className="fa-regular fa-thumbs-up"></i>
+                          </span>
+                          <span>0</span>
+                        </button>
+                        <button className="button is-white">
+                          <span className="icon">
+                            <i className="fa-regular fa-thumbs-down"></i>
+                          </span>
+                          <span>0</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
           </article>
         )
