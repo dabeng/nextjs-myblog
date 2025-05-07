@@ -1,10 +1,6 @@
 import { Comment } from '../models';
 import { IComment, ICommentOnePageParams } from '@/_services';
 
-interface IParentComment extends IComment {
-  children: Array<IComment>
-}
-
 export const commentService = {
   getBySearchParams,
   getAll,
@@ -14,27 +10,20 @@ export const commentService = {
   delete: _delete
 };
 
-async function appendSubcomments(data: Array<IParentComment>) {
-  const parentComments = data.filter(c => c.parentComment !== null);
-  const childrenComments = data.filter(c => c.parentComment === null);
+async function appendSubcomments(parentComments: Array<IComment>) {
   for await (const p of parentComments) {
-    const d = Comment.find({ parentComment: p.id })
+    const data = await Comment.find({ parentComment: p.id })
       .sort([['createdAt', 'asc']])
-      .populate('author');
+      .populate('author')
+      .lean();
 
-    if (d) {
-      p.children = d;
+    if (data.length !== 0) {
+      for (const c of data) {
+        c.id = c._id;
+      }
+      p.children = data;
     }
   }
-  // parentComments.forEach(async (p) => {
-  //   const data = await Comment.find({ parentComment: p.id })
-  //     .sort([['createdAt', 'asc']])
-  //     .populate('author');
-
-  //   if (data) {
-  //     p.children = data;
-  //   }
-  // });
 
   return parentComments;
 }
@@ -51,7 +40,12 @@ async function getBySearchParams({ page_size = 4, sortFieldName = 'createdAt', s
     .skip((params.page - 1) * page_size)
     .limit(page_size)
     .sort([[sortFieldName, sortOrder]])
-    .populate('author');
+    .populate('author')
+    .lean();
+
+  for (const c of data) {
+    c.id = c._id;
+  }
 
   const nestedComments = await appendSubcomments(data);
 

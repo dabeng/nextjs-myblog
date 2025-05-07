@@ -22,6 +22,7 @@ interface IComment {
   content: string;
   vote: Vote;
   parentComment?: string;
+  children?: [IComment];
 }
 
 interface ICommentOnePageResponse {

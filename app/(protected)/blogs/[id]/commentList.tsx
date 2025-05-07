@@ -152,7 +152,7 @@ export default function CommentList() {
                 }
               </div>
               {comment?.children?.map(childComment => (
-                <article className="media">
+                <article className="media" key={childComment.id}>
                   <figure className="media-left">
                     <p className="image is-48x48">
                       <img src="https://bulma.io/assets/images/placeholders/96x96.png" />
