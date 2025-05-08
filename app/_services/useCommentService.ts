@@ -22,6 +22,8 @@ interface IComment {
   content: string;
   vote: Vote;
   parentComment?: string;
+  createdAt: Date;
+  updatedAt: Date;
   children?: [IComment];
 }
 

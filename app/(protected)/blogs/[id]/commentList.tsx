@@ -77,9 +77,9 @@ export default function CommentList() {
       <p className="title is-4">Comments</p>
       <article className="media">
         <figure className="media-left">
-          <p className="image is-64x64">
-            <img src="https://bulma.io/assets/images/placeholders/128x128.png" />
-          </p>
+          <span className="icon" style={{ height: '64px', width: '64px' }}>
+            <i className="fa-solid fa-user-pen fa-3x"></i>
+          </span>
         </figure>
         <div className="media-content">
           <div className="field">
@@ -117,14 +117,14 @@ export default function CommentList() {
         comments?.data.map((comment, i) => (
           <article className="media" key={comment.id}>
             <figure className="media-left">
-              <p className="image is-64x64">
-                <img src="https://bulma.io/assets/images/placeholders/128x128.png" />
-              </p>
+              <span className="icon" style={{ height: '64px', width: '64px' }}>
+                <i className="fa-solid fa-user-pen fa-3x"></i>
+              </span>
             </figure>
             <div className="media-content">
               <div className="content">
                 <div>
-                  <span className="author-fullname">{comment.author.lastName + ' ' + comment.author.firstName}</span>
+                  <span className="author-fullname title is-5 has-text-grey-light">{comment.author.lastName + ' ' + comment.author.firstName}</span>
                 </div>
                 <div>
                   {comment.content}
@@ -154,16 +154,26 @@ export default function CommentList() {
               {comment?.children?.map(childComment => (
                 <article className="media" key={childComment.id}>
                   <figure className="media-left">
-                    <p className="image is-48x48">
-                      <img src="https://bulma.io/assets/images/placeholders/96x96.png" />
-                    </p>
+                    <span className="icon" style={{ height: '64px', width: '64px' }}>
+                      <i className="fa-solid fa-user-pen fa-3x"></i>
+                    </span>
                   </figure>
                   <div className="media-content">
                     <div className="content">
                       <div>
-                        <span className="author-fullname">
+                        <span className="author-fullname title is-5 has-text-grey-light">
                           {childComment.author.lastName + ' ' + childComment.author.firstName}
                         </span>
+                        <span className="published-date title is-6 has-text-weight-light ml-4">
+                          <time>{(new Date(childComment.createdAt)).toLocaleDateString('zh-Hans-CN')}</time>
+                        </span>
+                        <div className="buttons is-pulled-right">
+                          <button className="button is-white">
+                            <span className="icon">
+                              <i className="fa-solid fa-minus"></i>
+                            </span>
+                          </button>
+                        </div>
                       </div>
                       <div>
                         {childComment.content}
