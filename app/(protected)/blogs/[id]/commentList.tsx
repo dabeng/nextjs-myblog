@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import classNames from 'classnames';
 
 import { Spinner } from "_components";
 import { useAlertService, useCommentService, IComment } from "_services";
@@ -29,15 +30,23 @@ export default function CommentList() {
     queryFn: () => commentService.getOnePage({ author: session?.user.id, blog: id, page })
   });
   const [boxVisible, setBoxVisible] = useState(Array<boolean>);
+  const [commentBodyVisible, setCommentBodyVisible] = useState(Array<boolean>);
+  const [childCommentBodyVisible, setChildCommentBodyVisible] = useState(new Map());
 
   useEffect(() => {
     if (status === 'success') {
       setBoxVisible(comments.data.map(c => false));
+      setCommentBodyVisible(comments.data.map(c => true));
+      const temp = new Map();
+      for (const [index, pc] of comments.data.entries()) {
+        if (pc.children?.length) {
+          temp.set(index, Array.from(Array(pc.children?.length), () => true));
+        }
+      }
+      setChildCommentBodyVisible(temp);
     }
   }, [status, comments]);
-  // if (comments?.data) {
-  //   setBoxVisible(comments.data.map(c => false));
-  // }
+
   function showBox(targetIndex: number) {
     setBoxVisible(boxVisible?.map((v, i) => {
       if (i === targetIndex) {
@@ -46,6 +55,26 @@ export default function CommentList() {
         return v;
       }
     }));
+  }
+
+  function toggleCommentBody(index: number) {
+    setCommentBodyVisible(commentBodyVisible?.map((v, i) => {
+      if (i === index) {
+        return !v;
+      } else {
+        return v;
+      }
+    }));
+  }
+
+  function toggleChildCommentBody(rowIndex: number, columnIndex: number) {
+    setChildCommentBodyVisible(new Map(childCommentBodyVisible.set(rowIndex, childCommentBodyVisible.get(rowIndex).map((v, i) => {
+      if (i === columnIndex) {
+        return !v;
+      } else {
+        return v;
+      }
+    }))));
   }
 
   function formateDate(d: Date) {
@@ -124,9 +153,28 @@ export default function CommentList() {
             <div className="media-content">
               <div className="content">
                 <div>
-                  <span className="author-fullname title is-5 has-text-grey-light">{comment.author.lastName + ' ' + comment.author.firstName}</span>
+                  <span className="author-fullname title is-5 has-text-grey-light">
+                    {comment.author.lastName + ' ' + comment.author.firstName}
+                  </span>
+                  <span className="published-date title is-6 has-text-weight-light ml-4">
+                    <time>{(new Date(comment.createdAt)).toLocaleDateString('zh-Hans-CN')}</time>
+                  </span>
+                  <div className="buttons is-pulled-right">
+                    <button className="button is-white" onClick={() => toggleCommentBody(i)}>
+                      <span className="icon">
+                        <i className={classNames({
+                          "fa-solid": true,
+                          "fa-minus": commentBodyVisible[i],
+                          "fa-plus": !commentBodyVisible[i],
+                        })}
+                        ></i>
+                      </span>
+                    </button>
+                  </div>
                 </div>
-                <div>
+                <div className={classNames({
+                    "is-hidden": !commentBodyVisible[i]
+                  })}>
                   {comment.content}
                 </div>
                 <div className="buttons are-small">
@@ -151,8 +199,13 @@ export default function CommentList() {
                 )
                 }
               </div>
-              {comment?.children?.map(childComment => (
-                <article className="media" key={childComment.id}>
+              {comment?.children?.map((childComment, j) => (
+                <article
+                  className={classNames({
+                    "media": true,
+                    "is-hidden": !commentBodyVisible[i]
+                  })}
+                  key={childComment.id}>
                   <figure className="media-left">
                     <span className="icon" style={{ height: '64px', width: '64px' }}>
                       <i className="fa-solid fa-user-pen fa-3x"></i>
@@ -168,17 +221,27 @@ export default function CommentList() {
                           <time>{(new Date(childComment.createdAt)).toLocaleDateString('zh-Hans-CN')}</time>
                         </span>
                         <div className="buttons is-pulled-right">
-                          <button className="button is-white">
+                          <button className="button is-white" onClick={() => toggleChildCommentBody(i, j)}>
                             <span className="icon">
-                              <i className="fa-solid fa-minus"></i>
+                              <i className={classNames({
+                                "fa-solid": true,
+                                "fa-minus": childCommentBodyVisible?.get(i) && childCommentBodyVisible?.get(i)[j],
+                                "fa-plus": childCommentBodyVisible?.get(i) && !childCommentBodyVisible?.get(i)[j],
+                              })}
+                              ></i>
                             </span>
                           </button>
                         </div>
                       </div>
-                      <div>
+                      <div className={classNames({
+                        "is-hidden": childCommentBodyVisible?.get(i) && !childCommentBodyVisible?.get(i)[j]
+                      })}>
                         {childComment.content}
                       </div>
-                      <div className="buttons are-small">
+                      <div className={classNames({
+                        "buttons are-small": true,
+                        "is-hidden": childCommentBodyVisible?.get(i) && !childCommentBodyVisible?.get(i)[j]
+                      })}>
                         <button className="button is-white">
                           <span className="icon">
                             <i className="fa-regular fa-thumbs-up"></i>
