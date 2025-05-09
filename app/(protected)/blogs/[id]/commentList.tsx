@@ -103,7 +103,10 @@ export default function CommentList() {
 
   return (
     <div className="content box">
-      <p className="title is-4">Comments</p>
+      <p className="title is-4 pb-4" style={{borderBottom: "2px solid #eee"}}>
+        <span className="mr-4">{comments?.metadata?.total}</span>
+        Comments
+      </p>
       <article className="media">
         <figure className="media-left">
           <span className="icon" style={{ height: '64px', width: '64px' }}>
