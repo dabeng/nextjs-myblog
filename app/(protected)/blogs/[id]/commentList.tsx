@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import classNames from 'classnames';
 
 import { Spinner } from "_components";
-import { useAlertService, useCommentService, IComment } from "_services";
+import { useAlertService, useCommentService, useVoteService, IComment, IVote, Vote } from "_services";
 import { isErrored } from "stream";
 import CommentBox from "./commentbox";
 
@@ -23,6 +23,7 @@ export default function CommentList() {
   const { id } = useParams<{ id: string }>();
   const alertService = useAlertService();
   const commentService = useCommentService();
+  const voteService = useVoteService();
 
   const [page, setPage] = useState(1);
   const { data: comments, isPending, isError, error, status } = useQuery({
@@ -96,6 +97,26 @@ export default function CommentList() {
   async function postComment(commentContent: string, parentComment?: string) {
     try {
       await createCommentMutation.mutateAsync({ author: session?.user.id, blog: id, parentComment, content: commentContent });
+    } catch (error: any) {
+      alertService.error(error);
+    }
+  }
+
+  // const voteQueryClient = useQueryClient();
+  const createVoteMutation = useMutation({
+    mutationFn: (data: IVote) => {
+      return voteService.create(data);
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ['comments', 'list', id]
+      });
+    },
+  });
+
+  async function postVote(commentId: string, vote: Vote) {
+    try {
+      await createVoteMutation.mutateAsync({ user: session?.user.id, comment: commentId, vote });
     } catch (error: any) {
       alertService.error(error);
     }
@@ -181,17 +202,17 @@ export default function CommentList() {
                   {comment.content}
                 </div>
                 <div className="buttons are-small">
-                  <button className="button is-white">
+                  <button className="button is-white" onClick={() => postVote(comment.id, Vote.Upvote)}>
                     <span className="icon">
                       <i className="fa-regular fa-thumbs-up"></i>
                     </span>
-                    <span>0</span>
+                    <span>{comment.upvotes.length}</span>
                   </button>
-                  <button className="button is-white">
+                  <button className="button is-white" onClick={() => postVote(comment.id, Vote.Downvote)}>
                     <span className="icon">
                       <i className="fa-regular fa-thumbs-down"></i>
                     </span>
-                    <span>0</span>
+                    <span>{comment.downvotes.length}</span>
                   </button>
                   <button className="button is-white" onClick={() => showBox(i)}>Reply</button>
                 </div>
@@ -245,17 +266,17 @@ export default function CommentList() {
                         "buttons are-small": true,
                         "is-hidden": childCommentBodyVisible?.get(i) && !childCommentBodyVisible?.get(i)[j]
                       })}>
-                        <button className="button is-white">
+                        <button className="button is-white" onClick={() => postVote(childComment.id, Vote.Upvote)}>
                           <span className="icon">
                             <i className="fa-regular fa-thumbs-up"></i>
                           </span>
-                          <span>0</span>
+                          <span>{childComment.upvotes.length}</span>
                         </button>
-                        <button className="button is-white">
+                        <button className="button is-white" onClick={() => postVote(childComment.id, Vote.Downvote)}>
                           <span className="icon">
                             <i className="fa-regular fa-thumbs-down"></i>
                           </span>
-                          <span>0</span>
+                          <span>{childComment.downvotes.length}</span>
                         </button>
                       </div>
                     </div>

@@ -13,13 +13,13 @@ export type { IVote, IVoteSearchParams };
 
 enum Vote {
   Upvote = 'Upvote',
-  Downvote = 'Funny',
+  Downvote = 'Downvote',
 }
 
 interface IVote {
   id: string;
-  user: IUser;
-  comment: IComment;
+  user: string;
+  comment: string;
   vote: Vote;
   createdAt: Date;
   updatedAt: Date;

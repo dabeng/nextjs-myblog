@@ -15,7 +15,6 @@ async function appendSubcomments(parentComments: Array<IComment>) {
     const data = await Comment.find({ parentComment: p.id })
       .sort([['createdAt', 'asc']])
       .populate('author')
-      .populate('votes')
       .lean();
 
     if (data.length !== 0) {
@@ -42,7 +41,8 @@ async function getBySearchParams({ page_size = 4, sortFieldName = 'createdAt', s
     .limit(page_size)
     .sort([[sortFieldName, sortOrder]])
     .populate('author')
-    .populate('votes')
+    .populate('upvotes')
+    .populate('downvotes')
     .lean();
 
   for (const c of data) {
