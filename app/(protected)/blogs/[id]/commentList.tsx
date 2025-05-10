@@ -27,7 +27,7 @@ export default function CommentList() {
   const [page, setPage] = useState(1);
   const { data: comments, isPending, isError, error, status } = useQuery({
     queryKey: ['comments', 'list', id, page],
-    queryFn: () => commentService.getOnePage({ author: session?.user.id, blog: id, page })
+    queryFn: () => commentService.getOnePage({ blog: id, page })
   });
   const [boxVisible, setBoxVisible] = useState(Array<boolean>);
   const [commentBodyVisible, setCommentBodyVisible] = useState(Array<boolean>);

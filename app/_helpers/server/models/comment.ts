@@ -6,7 +6,8 @@ const schema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   blog: { type: Schema.Types.ObjectId, ref: 'Blog' },
   content: { type: String },
-  vote: { type: String, enum: ['Upvote', 'Downvote'] },
+  upvotes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
+  downvotes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
   parentComment: { type: Schema.Types.ObjectId, ref: 'Comment', required: false }
 }, {
   // add createdAt and updatedAt timestamps

@@ -42,7 +42,7 @@ async function create(params: any) {
     return;
   }
 
-  // save reaction
+  // save the brand new reaction
   const reaction = new Reaction(params);
   await reaction.save();
 }

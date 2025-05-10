@@ -8,8 +8,8 @@ import {
 import { AuthError } from "next-auth";
 import { ICommentOnePageParams } from "@/_services";
 /*
- * --- Users Route Handler---
- * The users handler receives HTTP requests sent to the base users route /api/users.
+ * --- Comments Route Handler---
+ * The comments handler receives HTTP requests sent to the base users route /api/comments.
  */
 export { GET, POST };
 

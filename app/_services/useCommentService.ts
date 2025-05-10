@@ -5,22 +5,19 @@ import { useAlertService } from "_services";
 export { useCommentService };
 export type { IComment, ICommentOnePageParams };
 
-/* --- Blog Service React Hook ---
+/* --- Comment Service React Hook ---
  * It encapsulates client-side logic and handles HTTP communication between the React front-end
  * and the Next.js back-end API for everything related to blogs.
  */
 
-enum Vote {
-  Upvote = 'Upvote',
-  Funny = 'Downvote',
-}
 
 interface IComment {
   id: string;
   author: string;
   blog: string;
   content: string;
-  vote: Vote;
+  upvotes: [string];
+  downvotes: [string];
   parentComment?: string;
   createdAt: Date;
   updatedAt: Date;
