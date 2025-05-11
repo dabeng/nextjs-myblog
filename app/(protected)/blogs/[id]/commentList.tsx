@@ -140,8 +140,14 @@ export default function CommentList() {
             </div>
           </div>
         </div>
-      </article >
-
+      </article>
+      <div className="tabs is-right has-text-weight-bold">
+        <ul>
+          <li className="is-active"><a>Best</a></li>
+          <li><a>Newest</a></li>
+          <li><a>Oldest</a></li>
+        </ul>
+      </div>
       {
         isPending && (
           <div style={{ "height": "300px", "fontSize": "64px" }}>
