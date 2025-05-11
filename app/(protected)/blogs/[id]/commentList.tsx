@@ -215,16 +215,14 @@ export default function CommentList() {
                     </div>
                     <div className="dropdown-menu" role="menu">
                       <div className="dropdown-content">
-                        <div className="dropdown-item">
-                          {comment.upvotes.map((v) => (
-                            <p key={v.id}>
-                              <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
-                                <i className="fa-solid fa-user-pen fa-2x"></i>
-                              </span>
-                              <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
-                            </p>
-                          ))}
-                        </div>
+                        {comment.upvotes.map((v) => (
+                          <div className="dropdown-item" key={v.id}>
+                            <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
+                              <i className="fa-solid fa-user-pen fa-2x"></i>
+                            </span>
+                            <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -242,16 +240,14 @@ export default function CommentList() {
                     </div>
                     <div className="dropdown-menu" role="menu">
                       <div className="dropdown-content">
-                        <div className="dropdown-item">
-                          {comment.downvotes.map((v) => (
-                            <p key={v.id}>
-                              <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
-                                <i className="fa-solid fa-user-pen fa-2x"></i>
-                              </span>
-                              <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
-                            </p>
-                          ))}
-                        </div>
+                        {comment.downvotes.map((v) => (
+                          <div className="dropdown-item" key={v.id}>
+                            <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
+                              <i className="fa-solid fa-user-pen fa-2x"></i>
+                            </span>
+                            <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -321,16 +317,14 @@ export default function CommentList() {
                           </div>
                           <div className="dropdown-menu" role="menu">
                             <div className="dropdown-content">
-                              <div className="dropdown-item">
-                                {childComment.upvotes.map((v) => (
-                                  <p key={v.id}>
-                                    <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
-                                      <i className="fa-solid fa-user-pen fa-2x"></i>
-                                    </span>
-                                    <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
-                                  </p>
-                                ))}
-                              </div>
+                              {childComment.upvotes.map((v) => (
+                                <div className="dropdown-item" key={v.id}>
+                                  <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
+                                    <i className="fa-solid fa-user-pen fa-2x"></i>
+                                  </span>
+                                  <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
+                                </div>
+                              ))}
                             </div>
                           </div>
                         </div>
@@ -348,16 +342,14 @@ export default function CommentList() {
                           </div>
                           <div className="dropdown-menu" role="menu">
                             <div className="dropdown-content">
-                              <div className="dropdown-item">
-                                {childComment.downvotes.map((v) => (
-                                  <p key={v.id}>
-                                    <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
-                                      <i className="fa-solid fa-user-pen fa-2x"></i>
-                                    </span>
-                                    <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
-                                  </p>
-                                ))}
-                              </div>
+                              {childComment.downvotes.map((v) => (
+                                <div className="dropdown-item" key={v.id}>
+                                  <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
+                                    <i className="fa-solid fa-user-pen fa-2x"></i>
+                                  </span>
+                                  <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
+                                </div>
+                              ))}
                             </div>
                           </div>
                         </div>
