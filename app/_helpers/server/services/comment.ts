@@ -1,3 +1,4 @@
+import { Children } from 'react';
 import { Comment } from '../models';
 import { IComment, ICommentOnePageParams } from '@/_services';
 
@@ -10,19 +11,26 @@ export const commentService = {
   delete: _delete
 };
 
-async function appendSubcomments(parentComments: Array<IComment>) {
-  for await (const p of parentComments) {
-    const data = await Comment.find({ parentComment: p.id })
+async function appendSubcomments(parentComments: Array<any>) {
+  for await (const pc of parentComments) {
+    const childComments = await Comment.find({ parentComment: pc.id })
       .sort([['createdAt', 'asc']])
       .populate('author')
-      .lean();
+      .populate({
+        path: 'upvotes',
+        populate: {
+          path: 'user'
+        }
+      })
+      .populate({
+        path: 'downvotes',
+        populate: {
+          path: 'user'
+        }
+      });
 
-    if (data.length !== 0) {
-      for (const c of data) {
-        c.id = c._id;
-      }
-      p.children = data;
-    }
+    Object.assign(pc, { children: childComments });
+    await pc.save();
   }
 
   return parentComments;
@@ -41,13 +49,19 @@ async function getBySearchParams({ page_size = 4, sortFieldName = 'createdAt', s
     .limit(page_size)
     .sort([[sortFieldName, sortOrder]])
     .populate('author')
-    .populate('upvotes')
-    .populate('downvotes')
-    .lean();
-
-  for (const c of data) {
-    c.id = c._id;
-  }
+    .populate({
+      path: 'upvotes',
+      populate: {
+        path: 'user'
+      }
+    })
+    .populate({
+      path: 'downvotes',
+      populate: {
+        path: 'user'
+      }
+    })
+    .populate('children');
 
   const nestedComments = await appendSubcomments(data);
 

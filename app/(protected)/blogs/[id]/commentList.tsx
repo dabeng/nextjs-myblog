@@ -102,7 +102,6 @@ export default function CommentList() {
     }
   }
 
-  // const voteQueryClient = useQueryClient();
   const createVoteMutation = useMutation({
     mutationFn: (data: IVote) => {
       return voteService.create(data);
@@ -124,7 +123,7 @@ export default function CommentList() {
 
   return (
     <div className="content box">
-      <p className="title is-4 pb-4" style={{borderBottom: "2px solid #eee"}}>
+      <p className="title is-4 pb-4" style={{ borderBottom: "2px solid #eee" }}>
         <span className="mr-4">{comments?.metadata?.total}</span>
         Comments
       </p>
@@ -197,23 +196,65 @@ export default function CommentList() {
                   </div>
                 </div>
                 <div className={classNames({
-                    "is-hidden": !commentBodyVisible[i]
-                  })}>
+                  "is-hidden": !commentBodyVisible[i]
+                })}>
                   {comment.content}
                 </div>
                 <div className="buttons are-small">
-                  <button className="button is-white" onClick={() => postVote(comment.id, Vote.Upvote)}>
-                    <span className="icon">
-                      <i className="fa-regular fa-thumbs-up"></i>
-                    </span>
-                    <span>{comment.upvotes.length}</span>
-                  </button>
-                  <button className="button is-white" onClick={() => postVote(comment.id, Vote.Downvote)}>
-                    <span className="icon">
-                      <i className="fa-regular fa-thumbs-down"></i>
-                    </span>
-                    <span>{comment.downvotes.length}</span>
-                  </button>
+                  <div className={classNames({
+                    "dropdown is-up": true,
+                    "is-hoverable": comment.upvotes.length > 0
+                  })}>
+                    <div className="dropdown-trigger">
+                      <button className="button is-white" onClick={() => postVote(comment.id, Vote.Upvote)}>
+                        <span className="icon">
+                          <i className="fa-regular fa-thumbs-up"></i>
+                        </span>
+                        <span>{comment.upvotes.length}</span>
+                      </button>
+                    </div>
+                    <div className="dropdown-menu" role="menu">
+                      <div className="dropdown-content">
+                        <div className="dropdown-item">
+                          {comment.upvotes.map((v) => (
+                            <p key={v.id}>
+                              <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
+                                <i className="fa-solid fa-user-pen fa-2x"></i>
+                              </span>
+                              <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={classNames({
+                    "dropdown is-up": true,
+                    "is-hoverable": comment.downvotes.length > 0
+                  })}>
+                    <div className="dropdown-trigger">
+                      <button className="button is-white" onClick={() => postVote(comment.id, Vote.Downvote)}>
+                        <span className="icon">
+                          <i className="fa-regular fa-thumbs-down"></i>
+                        </span>
+                        <span>{comment.downvotes.length}</span>
+                      </button>
+                    </div>
+                    <div className="dropdown-menu" role="menu">
+                      <div className="dropdown-content">
+                        <div className="dropdown-item">
+                          {comment.downvotes.map((v) => (
+                            <p key={v.id}>
+                              <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
+                                <i className="fa-solid fa-user-pen fa-2x"></i>
+                              </span>
+                              <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <button className="button is-white" onClick={() => showBox(i)}>Reply</button>
                 </div>
                 {boxVisible && boxVisible[i] && (
@@ -266,18 +307,60 @@ export default function CommentList() {
                         "buttons are-small": true,
                         "is-hidden": childCommentBodyVisible?.get(i) && !childCommentBodyVisible?.get(i)[j]
                       })}>
-                        <button className="button is-white" onClick={() => postVote(childComment.id, Vote.Upvote)}>
-                          <span className="icon">
-                            <i className="fa-regular fa-thumbs-up"></i>
-                          </span>
-                          <span>{childComment.upvotes.length}</span>
-                        </button>
-                        <button className="button is-white" onClick={() => postVote(childComment.id, Vote.Downvote)}>
-                          <span className="icon">
-                            <i className="fa-regular fa-thumbs-down"></i>
-                          </span>
-                          <span>{childComment.downvotes.length}</span>
-                        </button>
+                        <div className={classNames({
+                          "dropdown is-up": true,
+                          "is-hoverable": childComment.upvotes.length > 0
+                        })}>
+                          <div className="dropdown-trigger">
+                            <button className="button is-white" onClick={() => postVote(childComment.id, Vote.Upvote)}>
+                              <span className="icon">
+                                <i className="fa-regular fa-thumbs-up"></i>
+                              </span>
+                              <span>{childComment.upvotes.length}</span>
+                            </button>
+                          </div>
+                          <div className="dropdown-menu" role="menu">
+                            <div className="dropdown-content">
+                              <div className="dropdown-item">
+                                {childComment.upvotes.map((v) => (
+                                  <p key={v.id}>
+                                    <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
+                                      <i className="fa-solid fa-user-pen fa-2x"></i>
+                                    </span>
+                                    <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
+                                  </p>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={classNames({
+                          "dropdown is-up": true,
+                          "is-hoverable": childComment.downvotes.length > 0
+                        })}>
+                          <div className="dropdown-trigger">
+                            <button className="button is-white" onClick={() => postVote(childComment.id, Vote.Downvote)}>
+                              <span className="icon">
+                                <i className="fa-regular fa-thumbs-down"></i>
+                              </span>
+                              <span>{childComment.downvotes.length}</span>
+                            </button>
+                          </div>
+                          <div className="dropdown-menu" role="menu">
+                            <div className="dropdown-content">
+                              <div className="dropdown-item">
+                                {childComment.downvotes.map((v) => (
+                                  <p key={v.id}>
+                                    <span className="icon mr-4" style={{ height: '36px', width: '36px' }}>
+                                      <i className="fa-solid fa-user-pen fa-2x"></i>
+                                    </span>
+                                    <span className="author-fullname title is-5 has-text-grey-light">{v.user.firstName + ' ' + v.user.lastName}</span>
+                                  </p>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

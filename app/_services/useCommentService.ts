@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { useAlertService } from "_services";
+import { useAlertService, IVote } from "_services";
 
 export { useCommentService };
 export type { IComment, ICommentOnePageParams };
@@ -16,8 +16,8 @@ interface IComment {
   author: string;
   blog: string;
   content: string;
-  upvotes: [string];
-  downvotes: [string];
+  upvotes: [IVote];
+  downvotes: [IVote];
   parentComment?: string;
   createdAt: Date;
   updatedAt: Date;

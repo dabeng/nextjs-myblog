@@ -18,7 +18,7 @@ enum Vote {
 
 interface IVote {
   id: string;
-  user: string;
+  user: IUser;
   comment: string;
   vote: Vote;
   createdAt: Date;

@@ -15,6 +15,10 @@ const schema = new Schema({
   timestamps: true
 });
 
+// TODO: wait to enable
+// schema.virtual('fullName')
+//   .get(function() { return `${this.firstName} ${this.lastName}`; });
+
 schema.set('toJSON', {
   virtuals: true,
   versionKey: false,

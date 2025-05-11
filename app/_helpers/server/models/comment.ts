@@ -8,7 +8,8 @@ const schema = new Schema({
   content: { type: String },
   upvotes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
   downvotes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
-  parentComment: { type: Schema.Types.ObjectId, ref: 'Comment', required: false }
+  parentComment: { type: Schema.Types.ObjectId, ref: 'Comment', required: false },
+  children: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
 }, {
   // add createdAt and updatedAt timestamps
   timestamps: true
