@@ -121,6 +121,10 @@ export default function CommentList() {
     }
   }
 
+  function loadMoreComments() {
+    setPage(p => p + 1);
+  }
+
   return (
     <div className="content box">
       <p className="title is-4 pb-4" style={{ borderBottom: "2px solid #eee" }}>
@@ -150,9 +154,32 @@ export default function CommentList() {
       </div>
       {
         isPending && (
-          <div style={{ "height": "300px", "fontSize": "64px" }}>
-            <Spinner />
-          </div>
+            <article className="media">
+              <figure className="media-left">
+                <p className="image is-64x64 is-skeleton">
+                  <img src="https://placehold.co/128x128" alt="Placeholder image"/>
+                </p>
+              </figure>
+              <div className="media-content">
+                <div className="content is-skeleton">
+                  <p>
+                    <strong>John Smith</strong> <small>@johnsmith</small> <small>31m</small>
+                    <br/>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor
+                  </p>
+                </div>
+                <nav className="level is-mobile">
+                  <div className="level-left">
+                    <a className="level-item"><span className="icon is-small is-skeleton"><i className="fas fa-reply"></i></span></a>
+                    <a className="level-item"><span className="icon is-small is-skeleton"><i className="fas fa-retweet"></i></span></a>
+                    <a className="level-item"><span className="icon is-small is-skeleton"><i className="fas fa-heart"></i></span></a>
+                  </div>
+                </nav>
+              </div>
+              <div className="media-right">
+                <button aria-label="delete" className="delete is-skeleton"></button>
+              </div>
+            </article>
         )
       }
       {
@@ -369,7 +396,7 @@ export default function CommentList() {
         )
         )
       }
-      <button className="button is-medium is-fullwidth has-text-dark">Load more comments</button>
+      <button className="button is-medium is-fullwidth has-text-dark" onClick={loadMoreComments}>Load more comments</button>
     </div >
   );
 

@@ -28,7 +28,16 @@ export default function Blog() {
   return (
     <>
       {isPending && (
-        <div style={{ "height": "600px", "fontSize": "64px" }}><Spinner /></div>
+        <div className="box" style={{marginTop: '6rem'}}>
+          <div className="skeleton-block"></div>
+          <div className="skeleton-lines">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
       )}
       {isError && (
         <article className="message is-danger">

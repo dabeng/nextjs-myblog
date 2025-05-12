@@ -16,7 +16,7 @@ The blog page renders the add/edit user component with the specified user so the
 * is set to "edit" mode.
 */
 export default function ReactionSection() {
-  const {data: session} = useSession();
+  const { data: session } = useSession();
   const { id } = useParams<{ id: string }>();
   const reactionService = useReactionService();
 
@@ -63,39 +63,44 @@ export default function ReactionSection() {
   });
 
   async function submitReaction(reaction: string) {
-    await createReactionMutation.mutateAsync({reaction, user: session?.user.id, blog: id } as any);
+    await createReactionMutation.mutateAsync({ reaction, user: session?.user.id, blog: id } as any);
   }
-
-  if (isPending) return <div style={{ "height": "330px", "fontSize": "64px" }}><Spinner /></div>;
-
-  if (isError) return (
-    <article className="message is-danger">
-      <div className="message-body">
-        Error loading reactions: {error.message}
-      </div>
-    </article>
-  );
 
   return (
     <div className="content box">
       <p className="title is-2">Comments</p>
-      <p className="title is-4 has-text-centered">What do you think?</p>
-      <p className="title is-5 has-text-centered">10 Responses</p>
-      <nav className="level is-mobile">
-        {reactionData.map(r => (
-          <div key={r.caption} className="level-item has-text-centered">
-            <div className={styles['reaction-item']} onClick={() => submitReaction(r.key)}>
-              <p className="heading">
-                <span className="icon">
-                  <i className={`fa-regular fa-3x ${r.icon}`}></i>
-                </span>
-              </p>
-              <p className={`title is-5 ${styles['reaction-number']}`}>{r.count}</p>
-              <p className={`title is-6 ${styles['reaction-enum']}`}>{r.caption}</p>
-            </div>
+      {isPending &&
+        <div style={{ "height": "330px", "fontSize": "64px" }}><Spinner /></div>
+      }
+      {
+        isError &&
+        <article className="message is-danger">
+          <div className="message-body">
+            Error loading reactions: {error.message}
           </div>
-        ))}
-      </nav>
+        </article>
+      }
+      {data &&
+        <>
+          <p className="title is-4 has-text-centered">What do you think?</p>
+          <p className="title is-5 has-text-centered">10 Responses</p>
+          <nav className="level is-mobile">
+            {reactionData.map(r => (
+              <div key={r.caption} className="level-item has-text-centered">
+                <div className={styles['reaction-item']} onClick={() => submitReaction(r.key)}>
+                  <p className="heading">
+                    <span className="icon">
+                      <i className={`fa-regular fa-3x ${r.icon}`}></i>
+                    </span>
+                  </p>
+                  <p className={`title is-5 ${styles['reaction-number']}`}>{r.count}</p>
+                  <p className={`title is-6 ${styles['reaction-enum']}`}>{r.caption}</p>
+                </div>
+              </div>
+            ))}
+          </nav>
+        </>
+      }
     </div>
   );
 
