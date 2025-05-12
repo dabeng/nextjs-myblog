@@ -1,0 +1,12 @@
+.tag-list {
+  line-height: 3rem;
+}
+
+.tag-list a {
+  padding-left: 1rem;
+  color: hsl(0, 0%, 48%);
+}
+
+.tag-list a:not(:last-child):after {
+  content: ", ";
+}

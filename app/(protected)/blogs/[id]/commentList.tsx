@@ -369,6 +369,7 @@ export default function CommentList() {
         )
         )
       }
+      <button className="button is-medium is-fullwidth has-text-dark">Load more comments</button>
     </div >
   );
 
