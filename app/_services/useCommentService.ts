@@ -27,7 +27,8 @@ interface IComment {
 interface ICommentOnePageResponse {
   data: [IComment];
   metadata: {
-    total: number
+    total: number,
+    nextPage?: number
   }
 }
 

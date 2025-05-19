@@ -65,7 +65,7 @@ async function getBySearchParams({ page_size = 4, sortFieldName = 'createdAt', s
 
   const nestedComments = await appendSubcomments(data);
 
-  return { data: nestedComments, metadata: { total } };
+  return { data: nestedComments, metadata: { total, nextPage: total > params.page * page_size ? params.page + 1 : undefined } };
 }
 
 async function getAll() {
