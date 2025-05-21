@@ -29,7 +29,9 @@ export default function CommentList() {
     fetchNextPage, hasNextPage, isFetching, isFetchingNextPage
   } = useInfiniteQuery({
     queryKey: ['comments', 'list', id],
-    queryFn: ({ pageParam }) => commentService.getOnePage({ blog: id, page: pageParam }),
+    queryFn: ({ pageParam }) => commentService.getOnePage({
+      blog: id, page: pageParam, sortFieldName: 'upvoteCount', sortOrder: 'desc'
+    }),
     initialPageParam: 1,
     // the following function returns undefined or null to indicate there is no next page available.
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => lastPage.metadata.nextPage,

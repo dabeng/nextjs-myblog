@@ -44,24 +44,36 @@ async function getBySearchParams({ page_size = 4, sortFieldName = 'createdAt', s
   });
 
   const total = await Comment.countDocuments({ ...queryObj, parentComment: null });
-  const data = await Comment.find({ ...queryObj, parentComment: null })
-    .skip((params.page - 1) * page_size)
-    .limit(page_size)
-    .sort([[sortFieldName, sortOrder]])
-    .populate('author')
-    .populate({
-      path: 'upvotes',
-      populate: {
-        path: 'user'
-      }
-    })
-    .populate({
-      path: 'downvotes',
-      populate: {
-        path: 'user'
-      }
-    })
-    .populate('children');
+  let data;
+
+    data = await Comment
+      .find({ ...queryObj, parentComment: null })
+      .sort([[sortFieldName, sortOrder]])
+      .populate('author')
+      .populate({
+        path: 'upvotes',
+        populate: {
+          path: 'user'
+        }
+      })
+      .populate({
+        path: 'downvotes',
+        populate: {
+          path: 'user'
+        }
+      })
+      .populate('children')
+      .skip((params.page - 1) * page_size)
+      .limit(page_size);
+
+
+
+    // if (sortOrder === 'desc') {
+    //   data.sort((a,b) => b.upvotes.length - a.upvotes.length);
+    // } else {
+    //   data.sort((a,b) => a.upvotes.length - b.upvotes.length);
+    // }
+
 
   const nestedComments = await appendSubcomments(data);
 
