@@ -3,18 +3,12 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import classNames from 'classnames';
 
-import { Spinner } from "_components";
 import { useAlertService, useCommentService, useVoteService, IComment, IVote, Vote } from "_services";
-import { isErrored } from "stream";
 import CommentBox from "./commentbox";
-
-import styles from "./styles.module.css";
-import { relative } from "path";
-import { blogService } from "@/_helpers/server";
-import { CLIENT_STATIC_FILES_RUNTIME_POLYFILLS_SYMBOL } from "next/dist/shared/lib/constants";
+import { set } from "mongoose";
 
 export default function CommentList() {
   const { data: session } = useSession();
@@ -23,14 +17,17 @@ export default function CommentList() {
   const commentService = useCommentService();
   const voteService = useVoteService();
 
-  // const [page, setPage] = useState(1);
+  const [sortFieldName, setSortFieldName] = useState('upvoteCount');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const {
     data: comments, isPending, isError, error, status,
     fetchNextPage, hasNextPage, isFetching, isFetchingNextPage
   } = useInfiniteQuery({
-    queryKey: ['comments', 'list', id],
+    // Treat useQuery's query keys like a dependency array of useEffect. Whenever the key changes query gets executed.
+    // If you still want to control the firing of queries, you may explore the "enabled" option to the useQuery hook.
+    queryKey: ['comments', 'list', id, sortFieldName, sortOrder],
     queryFn: ({ pageParam }) => commentService.getOnePage({
-      blog: id, page: pageParam, sortFieldName: 'upvoteCount', sortOrder: 'desc'
+      blog: id, page: pageParam, sortFieldName, sortOrder
     }),
     initialPageParam: 1,
     // the following function returns undefined or null to indicate there is no next page available.
@@ -39,6 +36,11 @@ export default function CommentList() {
   const [boxVisible, setBoxVisible] = useState(Array<boolean>);
   const [commentBodyVisible, setCommentBodyVisible] = useState(Array<boolean>);
   const [childCommentBodyVisible, setChildCommentBodyVisible] = useState(new Map());
+
+  function sortBy(field:string, order: 'asc' | 'desc') {
+    setSortFieldName(field);
+    setSortOrder(order);
+  }
 
   useEffect(() => {
     if (status === 'success') {
@@ -131,10 +133,6 @@ export default function CommentList() {
     }
   }
 
-  // function loadMoreComments() {
-  //   setPage(p => p + 1);
-  // }
-
   return (
     <div className="content box">
       <p className="title is-4 pb-4" style={{ borderBottom: "2px solid #eee" }}>
@@ -157,9 +155,18 @@ export default function CommentList() {
       </article>
       <div className="tabs is-right has-text-weight-bold">
         <ul>
-          <li className="is-active"><a>Best</a></li>
-          <li><a>Newest</a></li>
-          <li><a>Oldest</a></li>
+          <li className={`${sortFieldName === 'upvoteCount' ? 'is-active' : ''}`}
+            onClick={() => sortBy('upvoteCount', 'desc')}>
+              <a>Best</a>
+          </li>
+          <li className={`${sortFieldName === 'createdAt' && sortOrder === 'desc' ? 'is-active' : ''}`}
+            onClick={() => sortBy('createdAt', 'desc')}>
+              <a>Newest</a>
+          </li>
+          <li className={`${sortFieldName === 'createdAt' && sortOrder === 'asc' ? 'is-active' : ''}`}
+            onClick={() => sortBy('createdAt','asc')}>
+              <a>Oldest</a>
+          </li>
         </ul>
       </div>
       {
