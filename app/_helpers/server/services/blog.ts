@@ -10,7 +10,7 @@ export const blogService = {
   delete: _delete
 };
 
-async function getBySearchParams({ page_size = 4, sortFieldName='updatedAt', sortOrder = 'desc', ...params}: IBlogOnePageParams) {
+async function getBySearchParams({ page_size = 4, sortFieldName='createdAt', sortOrder = 'desc', ...params}: IBlogOnePageParams) {
   const queryObj = { ...params };
   const excludedFields = ['page', 'sort', 'page_size'];
     excludedFields.forEach((field) => {

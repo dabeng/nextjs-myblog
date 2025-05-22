@@ -8,8 +8,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 
 import { useBlogService, IBlog, useAlertService } from "_services";
-import { Spinner } from "_components";
-import { Pagination } from "_components";
+import { Spinner, Pagination } from "_components";
 
 import styles from "./styles.module.css";
 
