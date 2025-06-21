@@ -14,4 +14,13 @@ a {
   text-decoration: none;
 }
 
+.navbar {
+  --bulma-navbar-background-color: #1abc9c;
+  --bulma-navbar-height: 9rem;
+  --bulma-navbar-item-img-max-height: 4.75rem;
+  padding-left: 25%;
+}
 
+a.navbar-item:hover {
+  background-color: transparent;
+}

@@ -18,10 +18,14 @@ function Nav() {
   }
 
   return (
-    <nav className="navbar is-dark">
+    <nav className="navbar">
       <div className="navbar-brand">
         <a className="navbar-item" href="https://github.com/dabeng" target="_blank">
           <img src="/logo.png" />
+          <p>
+            <span className="title is-3 has-text-white">Dabeng's My Blog</span><br/>
+          <span className="title is-5 has-text-white">A WEB DEVELOPER IN CHINA</span>
+          </p>
         </a>
         <div className="navbar-burger js-burger" data-target="navMenuColordark-example">
           <span></span>
