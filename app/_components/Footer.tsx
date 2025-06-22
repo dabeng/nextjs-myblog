@@ -5,37 +5,37 @@ export { Footer };
 function Footer() {
   return (
     <>
-      <div className="columns is-justify-content-center">
+      <div className="columns is-justify-content-center" style={{backgroundColor: '#2f2f2f', paddingTop: '50px',  paddingBottom: '50px'}}>
         <div className="column is-8">
           <div className="columns">
             <div className="column is-narrow">
               <div className="" style={{ width: "240px" }}>
-                <p className="title is-4">MONTHS</p>
-                <aside className="menu">
-                  <p className="menu-label title is-5">2025</p>
+                <p className="title is-4 has-text-white">MONTHS</p>
+                <aside className={`menu ${styles["month-list"]}`}>
+                  <p className={`menu-label title is-5 ${styles["year-label"]}`}>2025</p>
                   <ul className="menu-list">
-                    <li className="title is-5"><a>March (2)</a></li>
-                    <li className="title is-5"><a>February (1)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>March (2)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>February (1)</a></li>
                   </ul>
-                  <p className="menu-label title is-5">2024</p>
+                  <p className={`menu-label title is-5 ${styles["year-label"]}`}>2024</p>
                   <ul className="menu-list">
-                    <li className="title is-5"><a>August (2)</a></li>
-                    <li className="title is-5"><a>July (3)</a></li>
-                    <li className="title is-5"><a>June (4)</a></li>
-                    <li className="title is-5"><a>May (6)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>August (2)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>July (3)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>June (4)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>May (6)</a></li>
                   </ul>
-                  <p className="menu-label title is-5">2023</p>
+                  <p className={`menu-label title is-5 ${styles["year-label"]}`}>2023</p>
                   <ul className="menu-list">
-                    <li className="title is-5"><a>March (11)</a></li>
-                    <li className="title is-5"><a>February (45)</a></li>
-                    <li className="title is-5"><a>January (17)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>March (11)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>February (45)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>January (17)</a></li>
                   </ul>
                 </aside>
               </div>
             </div>
             <div className="column">
               <div className="">
-                <p className="title is-5">TAGS</p>
+                <p className="title is-5 has-text-white">TAGS</p>
                 <p className={`subtitle ${styles["tag-list"]}`}>
                   <a href="/blogs/tag/alerts">Alerts</a>
                   <a href="/blogs/tag/angular">Angular</a>

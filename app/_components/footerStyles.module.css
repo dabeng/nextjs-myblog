@@ -1,10 +1,18 @@
+.month-list .year-label {
+  color: #555;
+}
+
 .tag-list {
   line-height: 3rem;
 }
 
 .tag-list a {
   padding-left: 1rem;
-  color: hsl(0, 0%, 48%);
+  color: #1abc9c;
+}
+
+.tag-list a:hover {
+  color: #555;
 }
 
 .tag-list a:not(:last-child):after {
