@@ -14,21 +14,21 @@ function Footer() {
                 <aside className={`menu ${styles["month-list"]}`}>
                   <p className={`menu-label title is-5 ${styles["year-label"]}`}>2025</p>
                   <ul className="menu-list">
-                    <li className={`title is-5 ${styles["month-label"]}`}><a>March (2)</a></li>
-                    <li className={`title is-5 ${styles["month-label"]}`}><a>February (1)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>March <span>(2)</span></a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>February <span>(1)</span></a></li>
                   </ul>
                   <p className={`menu-label title is-5 ${styles["year-label"]}`}>2024</p>
                   <ul className="menu-list">
-                    <li className={`title is-5 ${styles["month-label"]}`}><a>August (2)</a></li>
-                    <li className={`title is-5 ${styles["month-label"]}`}><a>July (3)</a></li>
-                    <li className={`title is-5 ${styles["month-label"]}`}><a>June (4)</a></li>
-                    <li className={`title is-5 ${styles["month-label"]}`}><a>May (6)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>August <span>(2)</span></a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>July <span>(3)</span></a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>June <span>(4)</span></a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>May <span>(6)</span></a></li>
                   </ul>
                   <p className={`menu-label title is-5 ${styles["year-label"]}`}>2023</p>
                   <ul className="menu-list">
-                    <li className={`title is-5 ${styles["month-label"]}`}><a>March (11)</a></li>
-                    <li className={`title is-5 ${styles["month-label"]}`}><a>February (45)</a></li>
-                    <li className={`title is-5 ${styles["month-label"]}`}><a>January (17)</a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>March <span>(11)</span></a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>February <span>(45)</span></a></li>
+                    <li className={`title is-5 ${styles["month-label"]}`}><a>January <span>(17)</span></a></li>
                   </ul>
                 </aside>
               </div>

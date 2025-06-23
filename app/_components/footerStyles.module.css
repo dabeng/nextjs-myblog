@@ -1,5 +1,10 @@
-.month-list .year-label {
+.month-list .year-label, .month-list .month-label a span {
   color: #555;
+}
+
+.month-list .month-label a {
+  color: #1abc9c;
+  background-color: transparent;
 }
 
 .tag-list {
